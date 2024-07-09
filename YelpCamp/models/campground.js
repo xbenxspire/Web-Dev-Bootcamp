@@ -1,3 +1,7 @@
+// This file defines the Campground model schema for MongoDB
+// It includes fields for title, image, price, description, location, and reviews
+// It also includes a post-delete middleware to remove associated reviews
+
 const mongoose = require('mongoose');
 const Review = require('./review')
 const Schema = mongoose.Schema;

@@ -1,3 +1,5 @@
+// Credit to Colt Steele for providing this cities data for the YelpCamp project
+
 module.exports = [
     {
         city: "New York",

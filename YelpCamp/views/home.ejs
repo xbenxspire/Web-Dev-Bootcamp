@@ -1,3 +1,6 @@
+<%# This is the home page template for YelpCamp %>
+<%# It displays a simple welcome message and a button to view campgrounds %>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -5,11 +8,19 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Home</title>
+    <style>
+        .campgrounds-button {
+            display: block;
+            width: 200px;
+            margin: 20px auto;
+            text-align: center;
+        }
+    </style>
 </head>
 
 <body>
     <h1>HOME! YELP CAMP!</h1>
-
+    <a href="/campgrounds" class="btn btn-primary campgrounds-button">View Campgrounds</a>
 </body>
 
 </html>

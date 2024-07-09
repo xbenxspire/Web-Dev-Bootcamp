@@ -1,3 +1,7 @@
+// This file contains all the routes for review operations
+// It includes routes for creating and deleting reviews
+// It's nested under the campground routes
+
 const express = require('express');
 const router = express.Router({ mergeParams: true });
 

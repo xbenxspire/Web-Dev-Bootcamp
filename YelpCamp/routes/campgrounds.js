@@ -1,3 +1,7 @@
+// This file contains all the routes for campground operations
+// It includes routes for listing, creating, reading, updating, and deleting campgrounds
+// It uses middleware for authentication and validation
+
 const express = require('express');
 const router = express.Router();
 const catchAsync = require('../utils/catchAsync');
