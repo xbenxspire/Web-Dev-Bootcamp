@@ -1,16 +1,15 @@
-<%# This partial template renders flash messages %>
-<%# It displays success and error messages using Bootstrap alerts %>
+<%# Display flash messages using Bootstrap alerts %>
 
-<% if(success && success.length) {%>
-<div class="alert alert-success alert-dismissible fade show" role="alert">
-    <%= success %>
+<% if(success && success.length) { %>
+<div class="alert alert-success alert-dismissible fade show custom-alert" role="alert">
+    <%= typeof success === 'string' ? success.trim() : success %>
     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
 </div>
 <% } %>
 
-<% if(error && error.length) {%>
-<div class="alert alert-danger alert-dismissible fade show" role="alert">
-    <%= error %>
+<% if(error && error.length) { %>
+<div class="alert alert-danger alert-dismissible fade show custom-alert" role="alert">
+    <%= typeof error === 'string' ? error.trim() : error %>
     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
 </div>
 <% } %>

@@ -1,27 +1,7 @@
-<%# This is the home page template for YelpCamp %>
-<%# It displays a simple welcome message and a button to view campgrounds %>
+<% layout('layouts/boilerplate')%>
 
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Home</title>
-    <style>
-        .campgrounds-button {
-            display: inline-block;
-            width: 200px;
-            margin: 20px 10px;
-            text-align: center;
-        }
-    </style>
-</head>
-
-<body>
-    <h1>HOME! YELP CAMP!</h1>
-    <a href="/campgrounds" class="btn btn-primary campgrounds-button">View Campgrounds</a>
-    <a href="/register" class="btn btn-secondary campgrounds-button">Register</a>
-</body>
-
-</html>
+<div class="container mt-5">
+    <h1>Welcome to YelpCamp</h1>
+    <p>View our hand-picked campgrounds from all over the world</p>
+    <a class="btn btn-primary" href="/campgrounds">View Campgrounds</a>
+</div>

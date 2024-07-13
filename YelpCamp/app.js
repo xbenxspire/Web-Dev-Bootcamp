@@ -1,3 +1,8 @@
+// Load environment variables in development mode
+if (process.env.NODE_ENV !== "production") {
+    require('dotenv').config();
+}
+
 // Import required modules
 const express = require('express');
 const path = require('path');
@@ -24,7 +29,7 @@ mongoose.connect('mongodb://localhost:27017/yelp-camp', {
     useFindAndModify: false
 });
 
-// Set up database connection error handling
+// Set up database connection events
 const db = mongoose.connection;
 db.on("error", console.error.bind(console, "connection error:"));
 db.once("open", () => {
@@ -46,7 +51,7 @@ app.use(express.static(path.join(__dirname, 'public')))
 
 // Configure session
 const sessionConfig = {
-    secret: 'makeabettersecret!',
+    secret: 'thisshouldbeabettersecret!',
     resave: false,
     saveUninitialized: true,
     cookie: {
@@ -56,7 +61,6 @@ const sessionConfig = {
     }
 }
 
-// Set up session and flash
 app.use(session(sessionConfig))
 app.use(flash());
 
@@ -68,7 +72,7 @@ passport.use(new LocalStrategy(User.authenticate()));
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
-// Set up global middleware for flash messages and current user
+// Middleware to set local variables for templates
 app.use((req, res, next) => {
     console.log(req.session)
     res.locals.currentUser = req.user;
@@ -99,6 +103,7 @@ app.use((err, req, res, next) => {
     res.status(statusCode).render('error', { err })
 })
 
+// Start the server
 app.listen(3000, () => {
     console.log('Serving on port 3000')
 })

@@ -1,11 +1,10 @@
-<%# This template renders the form for creating a new campground %>
-<%# It includes fields for title, location, image URL, price, and description %>
-
 <% layout('layouts/boilerplate')%>
 <div class="row">
     <h1 class="text-center">New Campground</h1>
     <div class="col-6 offset-3">
-        <form action="/campgrounds" method="POST" novalidate class="validated-form">
+        <!-- Form for creating a new campground -->
+        <form action="/campgrounds" method="POST" novalidate class="validated-form" enctype="multipart/form-data">
+            <!-- Campground Title input -->
             <div class="mb-3">
                 <label class="form-label" for="title">Title</label>
                 <input class="form-control" type="text" id="title" name="campground[title]" required>
@@ -13,6 +12,7 @@
                     Looks good!
                 </div>
             </div>
+            <!-- Campground Location input -->
             <div class="mb-3">
                 <label class="form-label" for="location">Location</label>
                 <input class="form-control" type="text" id="location" name="campground[location]" required>
@@ -20,15 +20,19 @@
                     Looks good!
                 </div>
             </div>
+
+            <!-- Commented out Image URL input
             <div class="mb-3">
                 <label class="form-label" for="image">Image Url</label>
                 <input class="form-control" type="text" id="image" name="campground[image]" required>
                 <div class="valid-feedback">
                     Looks good!
                 </div>
-            </div>
+            </div> -->
+
+            <!-- Campground Price input -->
             <div class="mb-3">
-                <label class="form-label" for="price">Campground Price</label>
+                <label class="form-label" for="price">Campground Price Per Night</label>
                 <div class="input-group">
                     <span class="input-group-text" id="price-label">$</span>
                     <input type="text" class="form-control" id="price" placeholder="0.00" aria-label="price"
@@ -39,6 +43,7 @@
                 </div>
             </div>
 
+            <!-- Campground Description input -->
             <div class="mb-3">
                 <label class="form-label" for="description">Description</label>
                 <textarea class="form-control" type="text" id="description" name="campground[description]"
@@ -47,10 +52,22 @@
                     Looks good!
                 </div>
             </div>
+            <!-- Image upload input -->
+            <div class="mb-3">
+                <div class="form-file custom-file">
+                    <input type="file" class="form-file-input" id="image" name="image" multiple>
+                    <label class="form-file-label" for="image">
+                        <span class="form-file-text custom-file-label">Choose image(s)...</span>
+                        <span class="form-file-button">Browse</span>
+                    </label>
+                </div>
+            </div>
+            <!-- Submit button -->
             <div class="mb-3">
                 <button class="btn btn-success">Add Campground</button>
             </div>
         </form>
+        <!-- Link to view all campgrounds -->
         <a href="/campgrounds">All Campgrounds</a>
     </div>
 </div>

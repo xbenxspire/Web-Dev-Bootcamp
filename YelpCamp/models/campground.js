@@ -1,32 +1,45 @@
+// Import required modules
 const mongoose = require('mongoose');
 const Review = require('./review')
 const Schema = mongoose.Schema;
 
-// Define the schema for a campground
+
+// Define schema for image storage
+const ImageSchema = new Schema({
+    url: String,
+    filename: String
+});
+
+// Virtual property to generate thumbnail URL
+ImageSchema.virtual('thumbnail').get(function () {
+    return this.url.replace('/upload', '/upload/w_200');
+});
+
+// Define main Campground schema
 const CampgroundSchema = new Schema({
     title: String,
-    image: String,
+    images: [ImageSchema],
     price: Number,
     description: String,
     location: String,
-    // Reference to the User who created this campground
     author: {
         type: Schema.Types.ObjectId,
         ref: 'User'
     },
-    // Array of references to Review documents
     reviews: [
         {
             type: Schema.Types.ObjectId,
             ref: 'Review'
         }
-    ]
+    ],
+    imageUrl: String
 });
+
+
 
 // Middleware to delete associated reviews when a campground is deleted
 CampgroundSchema.post('findOneAndDelete', async function (doc) {
     if (doc) {
-        // Delete all reviews where the _id is in the deleted campground's reviews array
         await Review.deleteMany({
             _id: {
                 $in: doc.reviews
@@ -35,5 +48,5 @@ CampgroundSchema.post('findOneAndDelete', async function (doc) {
     }
 })
 
-// Create and export the Campground model
+// Export the Campground model
 module.exports = mongoose.model('Campground', CampgroundSchema);
