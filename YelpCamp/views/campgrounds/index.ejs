@@ -1,6 +1,6 @@
 <% layout('layouts/boilerplate')%>
 <!-- Container for the map -->
-<div id="map" style="width: 100%; height: 500px"></div>
+<div id="cluster-map" style="width: 100%; height: 500px"></div>
 <div class="container">
 <h1>All Campgrounds</h1>
 <!-- Link to add a new campground -->
@@ -25,6 +25,8 @@
                 <!-- Display campground title -->
                 <h5 class="card-title"><%= campground.title %> </h5>
 
+                <h5 class="card-title"><%= campground.properties.popUpMarkup %> </h5>
+
                 <!-- Display campground description -->
                 <p class="card-text"><%= campground.description %></p>
                 <!-- Display campground location -->
@@ -41,8 +43,20 @@
 </div>
 <!-- Script to set up map data -->
 <script>
-    const mapToken = '<%-process.env.MAPBOX_TOKEN%>';
-    const campgrounds = { features: <%- JSON.stringify(campgrounds) %>}
+    const mapToken = '<%-process.env.MAPTILER_API_KEY%>';
+    const campgrounds = { features: <%- JSON.stringify(campgrounds.map(campground => ({
+        type: 'Feature',
+        geometry: {
+            type: 'Point',
+            coordinates: campground.geometry.coordinates
+        },
+        properties: {
+            id: campground._id,
+            title: campground.title,
+            description: campground.description,
+            popUpMarkup: `<strong><a href="/campgrounds/${campground._id}">${campground.title}</a></strong><p>${campground.description.substring(0, 20)}...</p>`
+        }
+    }))) %>};
 </script>
 
 <!-- Include the cluster map JavaScript file -->

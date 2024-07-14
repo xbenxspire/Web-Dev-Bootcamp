@@ -2,10 +2,10 @@ const mongoose = require('mongoose');
 const Review = require('./review')
 const Schema = mongoose.Schema;
 
-
+// Example Cloudinary URL for reference
 // https://res.cloudinary.com/douqbebwk/image/upload/w_300/v1600113904/YelpCamp/gxgle1ovzd2f3dgcpass.png
 
-// Schema for image data
+// Schema for individual images
 const ImageSchema = new Schema({
     url: String,
     filename: String
@@ -49,15 +49,12 @@ const CampgroundSchema = new Schema({
     ]
 }, opts);
 
-
-// Virtual property for popup content on map
+// Virtual property for popup content in map
 CampgroundSchema.virtual('properties.popUpMarkup').get(function () {
     return `
-    <strong><a href="/campgrounds/${this._id}">${this.title}</a><strong>
+    <strong><a href="/campgrounds/${this._id}">${this.title}</a></strong>
     <p>${this.description.substring(0, 20)}...</p>`
 });
-
-
 
 // Middleware to delete associated reviews when a campground is deleted
 CampgroundSchema.post('findOneAndDelete', async function (doc) {
