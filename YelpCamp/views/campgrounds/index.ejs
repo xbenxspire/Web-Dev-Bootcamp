@@ -1,39 +1,36 @@
 <% layout('layouts/boilerplate')%>
-<!-- Container for the map -->
-<div id="cluster-map" style="width: 100%; height: 500px"></div>
+<!-- Container for the cluster map -->
+<div id="cluster-map"></div>
 <div class="container">
 <h1>All Campgrounds</h1>
-<!-- Link to add a new campground -->
-<div>
-    <a href="/campgrounds/new">Add Campground</a>
-</div>
-<!-- Loop through all campgrounds -->
+
+<!-- Loop through each campground -->
 <% for (let campground of campgrounds){%>
-<div class="card" mb-3>
+<div class="card mb-3" >
     <div class="row">
+        <!-- Campground image column -->
         <div class="col-md-4">
-            <!-- Display campground image if available, otherwise show default image -->
+            <!-- Check if campground has images -->
             <%if(campground.images.length) {%>
-            <img class="img-fluid" alt="" src="<%=campground.images[0].url%>">
+            <img crossorigin="anonymous" class="img-fluid" alt="" src="<%=campground.images[0].url%>">
             <% }else {%>
-            <img class="img-fluid" alt=""
+            <!-- Default image if no images are available -->
+            <img crossorigin="anonymous" class="img-fluid" alt=""
                 src="https://res.cloudinary.com/douqbebwk/image/upload/v1600103881/YelpCamp/lz8jjv2gyynjil7lswf4.png">
             <% } %>
         </div>
+        <!-- Campground details column -->
         <div class="col-md-8">
             <div class="card-body">
-                <!-- Display campground title -->
+                <!-- Campground title -->
                 <h5 class="card-title"><%= campground.title %> </h5>
-
-                <h5 class="card-title"><%= campground.properties.popUpMarkup %> </h5>
-
-                <!-- Display campground description -->
+                <!-- Campground description -->
                 <p class="card-text"><%= campground.description %></p>
-                <!-- Display campground location -->
+                <!-- Campground location -->
                 <p class="card-text">
                     <small class="text-muted"><%= campground.location%></small>
                 </p>
-                <!-- Link to view individual campground details -->
+                <!-- Link to view campground details -->
                 <a class="btn btn-primary" href="/campgrounds/<%=campground._id%>">View <%=campground.title%></a>
             </div>
         </div>
@@ -41,22 +38,11 @@
 </div>
 <% }%>
 </div>
+
 <!-- Script to set up map data -->
 <script>
-    const mapToken = '<%-process.env.MAPTILER_API_KEY%>';
-    const campgrounds = { features: <%- JSON.stringify(campgrounds.map(campground => ({
-        type: 'Feature',
-        geometry: {
-            type: 'Point',
-            coordinates: campground.geometry.coordinates
-        },
-        properties: {
-            id: campground._id,
-            title: campground.title,
-            description: campground.description,
-            popUpMarkup: `<strong><a href="/campgrounds/${campground._id}">${campground.title}</a></strong><p>${campground.description.substring(0, 20)}...</p>`
-        }
-    }))) %>};
+    const maptilerApiKey = '<%- process.env.MAPTILER_API_KEY %>';
+    const campgrounds = { features: <%- JSON.stringify(campgrounds) %>}
 </script>
 
 <!-- Include the cluster map JavaScript file -->

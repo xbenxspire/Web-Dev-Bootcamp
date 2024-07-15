@@ -1,15 +1,15 @@
 // Set the API key for Maptiler SDK
-maptilersdk.config.apiKey = mapToken;
+maptilersdk.config.apiKey = maptilerApiKey;
 
-console.log('MapTiler API Key:', mapToken);
+console.log('MapTiler API Key:', maptilerApiKey);
 console.log('Campgrounds data:', campgrounds);
 
 try {
     // Create a new map instance
     const map = new maptilersdk.Map({
         container: 'cluster-map',
-        style: maptilersdk.MapStyle.BRIGHT,
-        center: [-103.59179687498357, 40.66995747013945],
+        style: maptilersdk.MapStyle.STREETS,
+        center: [-103.5917, 40.6699],
         zoom: 3
     });
 
@@ -18,13 +18,15 @@ try {
     // When the map is loaded, add data and interactivity
     map.on('load', function () {
         console.log('Map loaded');
-        // Add a new source for campground data
+        // Add a new source from our GeoJSON data and
+        // set the 'cluster' option to true. GL-JS will
+        // add the point_count property to your source data.
         map.addSource('campgrounds', {
             type: 'geojson',
-            data: campgrounds, // GeoJSON data containing campground information
-            cluster: true, // Enable clustering
-            clusterMaxZoom: 14, // Max zoom level for clustering
-            clusterRadius: 50 // Radius of each cluster when clustering points
+            data: campgrounds,
+            cluster: true,
+            clusterMaxZoom: 14, // Max zoom to cluster points on
+            clusterRadius: 50 // Radius of each cluster when clustering points (defaults to 50)
         });
 
         // Add a layer for clustered points

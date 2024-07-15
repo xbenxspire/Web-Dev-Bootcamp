@@ -1,23 +1,42 @@
-<%# This template renders the user login form %>
-<%# It includes fields for username and password %>
-
 <% layout('layouts/boilerplate')%>
-<h1>Login</h1>
-<form action="/login" method="POST" class="validated-form" novalidate>
-    <div class="mb-3">
-        <label class="form-label" for="username">Username</label>
-        <input class="form-control" type="text" id="username" name="username" required>
-        <div class="valid-feedback">
-            Looks good!
-        </div>
-    </div>
 
-    <div class="mb-3">
-        <label class="form-label" for="password">Password</label>
-        <input class="form-control" type="password" id="password" name="password" required>
-        <div class="valid-feedback">
-            Looks good!
+<!-- Container for centering the login form -->
+<div class="container d-flex justify-content-center align-items-center mt-5">
+    <div class="row">
+        <!-- Column for responsive layout -->
+        <div class="col-md-6 offset-md-3 col-xl-4 offset-xl-4">
+            <!-- Card component for the login form -->
+            <div class="card shadow">
+                <!-- Header image for the login card -->
+                <img src="https://images.unsplash.com/photo-1510312305653-8ed496efae75?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1474&q=80"
+                    alt="Dome tent on mountain top with sun as background" class="card-img-top" />
+                <small class="text-muted text-center mt-1">Photo by <a href="https://unsplash.com/@kevinianeselli?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText">Kevin Ianeselli</a> on <a href="https://unsplash.com/photos/dome-tent-on-mountain-top-with-sun-as-background-photo-ebnlHkqfUHY?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText">Unsplash</a></small>
+                <div class="card-body">
+                    <h5 class="card-title">Login</h5>
+                    <!-- Login form -->
+                    <form action="/login" method="POST" class="validated-form" novalidate>
+                        <!-- Username input field -->
+                        <div class="mb-3">
+                            <label class="form-label" for="username">Username</label>
+                            <input class="form-control" type="text" id="username" name="username" autofocus required>
+                            <div class="valid-feedback">
+                                Looks good!
+                            </div>
+                        </div>
+
+                        <!-- Password input field -->
+                        <div class="mb-3">
+                            <label class="form-label" for="password">Password</label>
+                            <input class="form-control" type="password" id="password" name="password" required>
+                            <div class="valid-feedback">
+                                Looks good!
+                            </div>
+                        </div>
+                        <!-- Submit button -->
+                        <button class="btn btn-success btn-block">Login</button>
+                    </form>
+                </div>
+            </div>
         </div>
     </div>
-    <button class="btn btn-success">Login</button>
-</form>
+</div>

@@ -1,0 +1,11 @@
+/* Styles for the cluster map on the campgrounds index page */
+#cluster-map {
+    width: 100%;
+    height: 500px;
+}
+
+/* Styles for the individual campground map */
+#map {
+    width: 100%;
+    height: 300px;
+}
