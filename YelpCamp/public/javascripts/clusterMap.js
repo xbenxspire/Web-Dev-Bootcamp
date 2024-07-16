@@ -1,5 +1,5 @@
 // Set the API key for Maptiler SDK
-maptilersdk.config.apiKey = maptilerApiKey;
+maptilersdk.config.apiKey = mapTilerKey;
 
 console.log('MapTiler API Key:', maptilerApiKey);
 console.log('Campgrounds data:', campgrounds);

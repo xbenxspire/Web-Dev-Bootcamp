@@ -7,7 +7,7 @@ const { cloudinary } = require("../cloudinary");
 // Controller to get all campgrounds
 module.exports.index = async (req, res) => {
     const campgrounds = await Campground.find({}).populate('popupText');
-    res.render('campgrounds/index', { campgrounds })
+    res.render('campgrounds/index', { campgrounds: JSON.parse(JSON.stringify(campgrounds)) });
 }
 
 // Controller to render new campground form

@@ -1,4 +1,4 @@
-// Load environment variables in development mode
+// Load environment variables in development
 if (process.env.NODE_ENV !== "production") {
     require('dotenv').config();
 }
@@ -17,36 +17,38 @@ const LocalStrategy = require('passport-local');
 const User = require('./models/user');
 const helmet = require('helmet');
 const mongoSanitize = require('express-mongo-sanitize');
-
-// Import route handlers
 const userRoutes = require('./routes/users');
 const campgroundRoutes = require('./routes/campgrounds');
 const reviewRoutes = require('./routes/reviews');
 
-// Connect to MongoDB
-mongoose.connect('mongodb://localhost:27017/yelp-camp', {
+const MongoStore = require('connect-mongo');
+
+// Database connection
+const dbUrl = 'mongodb://localhost:27017/yelp-camp';
+
+mongoose.connect(dbUrl, {
     useNewUrlParser: true,
     useCreateIndex: true,
     useUnifiedTopology: true,
     useFindAndModify: false
 });
 
-// Set up database connection events
+// Database connection error handling
 const db = mongoose.connection;
 db.on("error", console.error.bind(console, "connection error:"));
 db.once("open", () => {
     console.log("Database connected");
 });
 
-// Initialize Express app
+// Express app setup
 const app = express();
 
-// Set up view engine and views directory
+// View engine setup
 app.engine('ejs', ejsMate)
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'))
 
-// Set up middleware
+// Middleware setup
 app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride('_method'));
 app.use(express.static(path.join(__dirname, 'public')))
@@ -54,10 +56,23 @@ app.use(mongoSanitize({
     replaceWith: '_'
 }))
 
-// Configure session
+// Session and store configuration
+const secret = process.env.SECRET || 'thisshouldbeabettersecret!';
+
+const store = MongoStore.create({
+    mongoUrl: dbUrl,
+    secret: secret,
+    touchAfter: 24 * 60 * 60
+});
+
+store.on("error", function (e) {
+    console.log("SESSION STORE ERROR", e)
+})
+
 const sessionConfig = {
+    store,
     name: 'session',
-    secret: 'thisshouldbeabettersecret!',
+    secret: secret,
     resave: false,
     saveUninitialized: true,
     cookie: {
@@ -68,29 +83,46 @@ const sessionConfig = {
     }
 }
 
-// Set up session, flash, and helmet middleware
 app.use(session(sessionConfig));
 app.use(flash());
 app.use(helmet());
 
-// Configure Content Security Policy
+// Add this middleware to make flash messages available to all templates
+app.use((req, res, next) => {
+    res.locals.success = req.flash('success');
+    res.locals.error = req.flash('error');
+    next();
+});
+
+// Add this middleware to make maptilerApiKey available to all templates
+app.use((req, res, next) => {
+    res.locals.currentUser = req.user;
+    res.locals.success = req.flash('success');
+    res.locals.error = req.flash('error');
+    res.locals.mapTilerKey = process.env.MAPTILER_API_KEY;
+    console.log('MapTiler API Key:', process.env.MAPTILER_API_KEY); // Add this line for debugging
+    next();
+});
+
+// Content Security Policy configuration
 const scriptSrcUrls = [
     "https://stackpath.bootstrapcdn.com/",
     "https://kit.fontawesome.com/",
     "https://cdnjs.cloudflare.com/",
     "https://cdn.jsdelivr.net",
-    "https://cdn.maptiler.com/",
+    "https://api.maptiler.com/",
 ];
 const styleSrcUrls = [
     "https://kit-free.fontawesome.com/",
     "https://stackpath.bootstrapcdn.com/",
     "https://fonts.googleapis.com/",
     "https://use.fontawesome.com/",
-    "https://cdn.jsdelivr.net",
-    "https://cdn.maptiler.com/",
+    "https://api.maptiler.com/",
 ];
 const connectSrcUrls = [
     "https://api.maptiler.com/",
+    "https://api.maptiler.com/maps/",
+    "https://*.maptiler.com/"
 ];
 const fontSrcUrls = [];
 app.use(
@@ -108,39 +140,30 @@ app.use(
                 "data:",
                 "https://res.cloudinary.com/douqbebwk/", //SHOULD MATCH YOUR CLOUDINARY ACCOUNT! 
                 "https://images.unsplash.com/",
-                "https://api.maptiler.com/",
             ],
             fontSrc: ["'self'", ...fontSrcUrls],
         },
     })
 );
 
-// Set up Passport for authentication
+// Passport configuration
 app.use(passport.initialize());
 app.use(passport.session());
 passport.use(new LocalStrategy(User.authenticate()));
+
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
-// Middleware to set locals for templates
-app.use((req, res, next) => {
-    res.locals.currentUser = req.user;
-    res.locals.success = req.flash('success');
-    res.locals.error = req.flash('error');
-    next();
-})
-
-// Set up routes
+// Routes
 app.use('/', userRoutes);
 app.use('/campgrounds', campgroundRoutes)
 app.use('/campgrounds/:id/reviews', reviewRoutes)
 
-// Home route
 app.get('/', (req, res) => {
     res.render('home')
 });
 
-// 404 handler for undefined routes
+// 404 handler
 app.all('*', (req, res, next) => {
     next(new ExpressError('Page Not Found', 404))
 })
@@ -152,7 +175,8 @@ app.use((err, req, res, next) => {
     res.status(statusCode).render('error', { err })
 })
 
-// Start the server
-app.listen(3000, () => {
-    console.log('Serving on port 3000')
+// Start server
+const port = process.env.PORT || 3000;
+app.listen(port, () => {
+    console.log(`Serving on port ${port}`)
 })
