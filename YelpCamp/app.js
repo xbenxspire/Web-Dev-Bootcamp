@@ -100,7 +100,6 @@ app.use((req, res, next) => {
     res.locals.success = req.flash('success');
     res.locals.error = req.flash('error');
     res.locals.mapTilerKey = process.env.MAPTILER_API_KEY;
-    console.log('MapTiler API Key:', process.env.MAPTILER_API_KEY); // Add this line for debugging
     next();
 });
 
@@ -110,19 +109,18 @@ const scriptSrcUrls = [
     "https://kit.fontawesome.com/",
     "https://cdnjs.cloudflare.com/",
     "https://cdn.jsdelivr.net",
-    "https://api.maptiler.com/",
+    "https://cdn.maptiler.com/",
 ];
 const styleSrcUrls = [
     "https://kit-free.fontawesome.com/",
     "https://stackpath.bootstrapcdn.com/",
     "https://fonts.googleapis.com/",
     "https://use.fontawesome.com/",
-    "https://api.maptiler.com/",
+    "https://cdn.jsdelivr.net",
+    "https://cdn.maptiler.com/",
 ];
 const connectSrcUrls = [
     "https://api.maptiler.com/",
-    "https://api.maptiler.com/maps/",
-    "https://*.maptiler.com/"
 ];
 const fontSrcUrls = [];
 app.use(
@@ -140,6 +138,7 @@ app.use(
                 "data:",
                 "https://res.cloudinary.com/douqbebwk/", //SHOULD MATCH YOUR CLOUDINARY ACCOUNT! 
                 "https://images.unsplash.com/",
+                "https://api.maptiler.com/",
             ],
             fontSrc: ["'self'", ...fontSrcUrls],
         },

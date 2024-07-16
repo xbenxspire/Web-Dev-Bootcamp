@@ -44,8 +44,17 @@
 <script src="https://cdn.maptiler.com/maptiler-sdk-js/latest/maptiler-sdk.umd.min.js"></script>
 <link href="https://cdn.maptiler.com/maptiler-sdk-js/latest/maptiler-sdk.css" rel="stylesheet" />
 <script>
-    const mapTilerKey = '<%= process.env.MAPTILER_API_KEY %>';
-    const campgrounds = { features: <%- JSON.stringify(campgrounds) %> };
+    const mapTilerKey = '<%= mapTilerKey %>';
+    const campgrounds = { features: <%- JSON.stringify(campgrounds.map(c => ({
+        type: 'Feature',
+        geometry: c.geometry,
+        properties: {
+            id: c._id,
+            title: c.title,
+            description: c.description,
+            popUpMarkup: `<a href="/campgrounds/${c._id}">${c.title}</a>`
+        }
+    }))) %> };
 </script>
 
 <!-- Include the cluster map JavaScript file -->

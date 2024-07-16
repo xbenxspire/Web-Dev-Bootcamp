@@ -6,8 +6,8 @@ const { cloudinary } = require("../cloudinary");
 
 // Controller to get all campgrounds
 module.exports.index = async (req, res) => {
-    const campgrounds = await Campground.find({}).populate('popupText');
-    res.render('campgrounds/index', { campgrounds: JSON.parse(JSON.stringify(campgrounds)) });
+    const campgrounds = await Campground.find({});
+    res.render('campgrounds/index', { campgrounds });
 }
 
 // Controller to render new campground form
@@ -72,7 +72,7 @@ module.exports.updateCampground = async (req, res) => {
         for (let filename of req.body.deleteImages) {
             await cloudinary.uploader.destroy(filename);
         }
-        await campground.updateOne({ $pull: { images: { filename: { $in: req.body.deleteImages } } } })
+        await campground.updateOne({ $pull: { images: { filename: { $in: req.body.deleteImages } } } });
     }
     req.flash('success', 'Successfully updated campground!');
     res.redirect(`/campgrounds/${campground._id}`)
