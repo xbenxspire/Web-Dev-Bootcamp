@@ -10,6 +10,7 @@ const upload = multer({ storage });
 const maptiler = require('@maptiler/client');
 const fetch = require('node-fetch');
 
+// Configure MapTiler
 maptiler.config.apiKey = process.env.MAPTILER_API_KEY;
 maptiler.config.fetch = fetch;
 

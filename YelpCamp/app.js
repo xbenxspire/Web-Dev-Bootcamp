@@ -40,9 +40,6 @@ mongoose.connect(dbUrl, {
 // Handle database connection events
 const db = mongoose.connection;
 db.on("error", console.error.bind(console, "connection error:"));
-db.once("open", () => {
-    console.log("Database connected");
-});
 
 // Initialize Express app
 const app = express();
@@ -181,3 +178,7 @@ app.listen(port, () => {
 }).on('error', (e) => {
     console.error('Error starting server:', e);
 });
+
+// Add this line to make fetch available globally
+const fetch = require('node-fetch');
+global.fetch = fetch;

@@ -1,7 +1,9 @@
 // Import required modules
 const Campground = require('../models/campground');
-const maptilerClient = require("@maptiler/client");
-maptilerClient.config.apiKey = process.env.MAPTILER_API_KEY;
+const maptiler = require('@maptiler/client');
+const fetch = require('node-fetch');
+maptiler.config.apiKey = process.env.MAPTILER_API_KEY;
+maptiler.config.fetch = fetch;
 const { cloudinary } = require("../cloudinary");
 
 // Controller to get all campgrounds
@@ -18,7 +20,7 @@ module.exports.renderNewForm = (req, res) => {
 // Controller to create a new campground
 module.exports.createCampground = async (req, res, next) => {
     // Get geocoding data for the campground location
-    const geoData = await maptilerClient.geocoding.forward(req.body.campground.location, { limit: 1 });
+    const geoData = await maptiler.geocoding.forward(req.body.campground.location, { limit: 1 });
     const campground = new Campground(req.body.campground);
     campground.geometry = geoData.features[0].geometry;
     campground.images = req.files.map(f => ({ url: f.path, filename: f.filename }));
@@ -63,7 +65,7 @@ module.exports.updateCampground = async (req, res) => {
     console.log(req.body);
     const campground = await Campground.findByIdAndUpdate(id, { ...req.body.campground });
     // Update geocoding data
-    const geoData = await maptilerClient.geocoding.forward(req.body.campground.location, { limit: 1 });
+    const geoData = await maptiler.geocoding.forward(req.body.campground.location, { limit: 1 });
     campground.geometry = geoData.features[0].geometry;
     const imgs = req.files.map(f => ({ url: f.path, filename: f.filename }));
     campground.images.push(...imgs);
