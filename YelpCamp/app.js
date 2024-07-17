@@ -95,13 +95,6 @@ app.use(helmet());
 
 // Make flash messages available to all templates
 app.use((req, res, next) => {
-    res.locals.success = req.flash('success');
-    res.locals.error = req.flash('error');
-    next();
-});
-
-// Make user and API key available to all templates
-app.use((req, res, next) => {
     res.locals.currentUser = req.user;
     res.locals.success = req.flash('success');
     res.locals.error = req.flash('error');
@@ -185,4 +178,6 @@ app.use((err, req, res, next) => {
 const port = process.env.PORT || 3000;
 app.listen(port, () => {
     console.log(`Serving on port ${port}`)
-})
+}).on('error', (e) => {
+    console.error('Error starting server:', e);
+});
