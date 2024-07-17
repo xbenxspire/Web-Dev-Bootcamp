@@ -7,6 +7,7 @@ if (process.env.NODE_ENV !== "production") {
 const express = require('express');
 const path = require('path');
 const mongoose = require('mongoose');
+mongoose.set('strictQuery', true); // Added this line to address Mongoose deprecation warning
 const ejsMate = require('ejs-mate');
 const session = require('express-session');
 const flash = require('connect-flash');
@@ -28,11 +29,13 @@ const dbUrl = process.env.DB_URL || 'mongodb://localhost:27017/yelp-camp';
 
 mongoose.connect(dbUrl, {
     useNewUrlParser: true,
-    useUnifiedTopology: true,
-    // Remove deprecated options:
-    // useCreateIndex: true,
-    // useFindAndModify: false
-});
+    useUnifiedTopology: true
+})
+    .then(() => console.log('Database connected'))
+    .catch(err => {
+        console.log('MongoDB connection error:');
+        console.error(err);
+    });
 
 // Handle database connection events
 const db = mongoose.connection;
@@ -172,9 +175,10 @@ app.all('*', (req, res, next) => {
 
 // Global error handler
 app.use((err, req, res, next) => {
+    console.error(err);
     const { statusCode = 500 } = err;
-    if (!err.message) err.message = 'Oh No, Something Went Wrong!'
-    res.status(statusCode).render('error', { err })
+    if (!err.message) err.message = 'Oh No, Something Went Wrong!';
+    res.status(statusCode).render('error', { err, statusCode });
 })
 
 // Start the server
