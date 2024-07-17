@@ -118,7 +118,10 @@ const styleSrcUrls = [
 const connectSrcUrls = [
     "https://api.maptiler.com/",
 ];
-const fontSrcUrls = [];
+const fontSrcUrls = [
+    "https://fonts.gstatic.com/",
+];
+
 app.use(
     helmet.contentSecurityPolicy({
         directives: {
@@ -132,7 +135,7 @@ app.use(
                 "'self'",
                 "blob:",
                 "data:",
-                "https://res.cloudinary.com/douqbebwk/",
+                "https://res.cloudinary.com/dttpm6icr/",
                 "https://images.unsplash.com/",
                 "https://api.maptiler.com/",
             ],

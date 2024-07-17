@@ -9,6 +9,9 @@ const { cloudinary } = require("../cloudinary");
 // Controller to get all campgrounds
 module.exports.index = async (req, res) => {
     const campgrounds = await Campground.find({});
+    campgrounds.forEach(campground => {
+        console.log(campground.images);
+    });
     res.render('campgrounds/index', { campgrounds });
 }
 
@@ -19,16 +22,27 @@ module.exports.renderNewForm = (req, res) => {
 
 // Controller to create a new campground
 module.exports.createCampground = async (req, res, next) => {
-    // Get geocoding data for the campground location
-    const geoData = await maptiler.geocoding.forward(req.body.campground.location, { limit: 1 });
-    const campground = new Campground(req.body.campground);
-    campground.geometry = geoData.features[0].geometry;
-    campground.images = req.files.map(f => ({ url: f.path, filename: f.filename }));
-    campground.author = req.user._id;
-    await campground.save();
-    console.log(campground);
-    req.flash('success', 'Successfully made a new campground!');
-    res.redirect(`/campgrounds/${campground._id}`)
+    try {
+        const geoData = await maptiler.geocoding.forward(req.body.campground.location, { limit: 1 });
+        console.log('GeoData:', geoData); // Add this line for debugging
+
+        if (!geoData.features.length) {
+            throw new Error('Location not found. Please try a more specific location.');
+        }
+
+        const campground = new Campground(req.body.campground);
+        campground.geometry = geoData.features[0].geometry;
+        campground.images = req.files.map(f => ({ url: f.path, filename: f.filename }));
+        campground.author = req.user._id;
+        await campground.save();
+        console.log('Saved campground:', campground); // Add this line for debugging
+        req.flash('success', 'Successfully made a new campground!');
+        res.redirect(`/campgrounds/${campground._id}`);
+    } catch (error) {
+        console.error('Error creating campground:', error);
+        req.flash('error', error.message);
+        res.redirect('/campgrounds/new');
+    }
 }
 
 // Controller to show a specific campground
@@ -62,11 +76,7 @@ module.exports.renderEditForm = async (req, res) => {
 // Controller to update a campground
 module.exports.updateCampground = async (req, res) => {
     const { id } = req.params;
-    console.log(req.body);
     const campground = await Campground.findByIdAndUpdate(id, { ...req.body.campground });
-    // Update geocoding data
-    const geoData = await maptiler.geocoding.forward(req.body.campground.location, { limit: 1 });
-    campground.geometry = geoData.features[0].geometry;
     const imgs = req.files.map(f => ({ url: f.path, filename: f.filename }));
     campground.images.push(...imgs);
     await campground.save();

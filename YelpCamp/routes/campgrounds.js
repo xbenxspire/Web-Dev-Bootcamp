@@ -31,7 +31,11 @@ router.route('/:id')
     .delete(isLoggedIn, isAuthor, catchAsync(campgrounds.deleteCampground)); // DELETE campground
 
 // GET route for edit campground form
-router.get('/:id/edit', isLoggedIn, isAuthor, catchAsync(campgrounds.renderEditForm))
+router.get('/:id/edit', isLoggedIn, isAuthor, catchAsync(campgrounds.renderEditForm));
+
+router.put('/:id', isLoggedIn, isAuthor, upload.array('image'), validateCampground, catchAsync(campgrounds.updateCampground));
+
+router.delete('/:id', isLoggedIn, isAuthor, catchAsync(campgrounds.deleteCampground));
 
 // Export the router
 module.exports = router;

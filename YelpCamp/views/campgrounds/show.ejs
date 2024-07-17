@@ -34,18 +34,29 @@
             </div>
             <ul class="list-group list-group-flush">
                 <li class="list-group-item text-muted"><%= campground.location %></li>
-                <li class="list-group-item">
-                    Submitted by <%= campground.author && campground.author.username ? campground.author.username : 'Unknown User' %>
-                </li>
-                <li class="list-group-item">$<%= campground.price %>/night</li>
+                <li class="list-group-item">Submitted by <%= campground.author.username%></li>
+                <li class="list-group-item">$<%= campground.price%>/night</li>
             </ul>
-            <!-- Edit and Delete buttons (only visible to campground author) -->
-            <% if (currentUser && campground.author && campground.author._id && campground.author._id.equals(currentUser._id)) { %>
+
+            <div class="card-body">
+                <h6>Debugging Info:</h6>
+                <p>Current User: <%= currentUser ? currentUser.username : 'Not logged in' %></p>
+                <p>Current User ID: <%= currentUser ? currentUser._id : 'N/A' %></p>
+                <p>Campground Author: <%= campground.author.username %></p>
+                <p>Campground Author ID: <%= campground.author._id %></p>
+                <p>IDs Match: <%= currentUser && campground.author.equals(currentUser._id) ? 'Yes' : 'No' %></p>
+            </div>
+
+            <% if(currentUser && campground.author.equals(currentUser._id)) { %>
             <div class="card-body">
                 <a class="card-link btn btn-info" href="/campgrounds/<%=campground._id%>/edit">Edit</a>
                 <form class="d-inline" action="/campgrounds/<%=campground._id%>?_method=DELETE" method="POST">
                     <button class="btn btn-danger">Delete</button>
                 </form>
+            </div>
+            <% } else { %>
+            <div class="card-body">
+                <p>You don't have permission to edit or delete this campground.</p>
             </div>
             <% } %>
             <div class="card-footer text-muted">
