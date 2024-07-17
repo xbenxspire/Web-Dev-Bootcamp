@@ -1,35 +1,47 @@
 # YelpCamp Setup Guide
 
 ## Prerequisites
-- Node.js (v14 or later)
+- Node.js (v14+)
 - MongoDB
 
-## Setup Steps
+## Quick Start
 
-1. Clone the repository:
+1. Clone and enter the repository:
+   ```
    git clone https://github.com/your-username/yelpcamp.git
    cd YelpCamp
+   ```
 
 2. Install dependencies:
+   ```
    npm install
+   ```
 
-3. Create a .env file in the root directory with:
-   SESSION_SECRET=your_secret_key_here
+## Environment Setup
 
-4. Ensure MongoDB is running locally on default port (27017)
+1. Copy `.env.example` to `.env`
+2. Fill in your own values in the `.env` file
 
-5. Start the application:
+4. Start MongoDB locally (default port: 27017)
+
+5. Launch the app:
+   ```
    npm start
+   ```
 
-6. Open a web browser and go to http://localhost:3000
+6. Visit http://localhost:3000 in your browser
 
-## Development Mode
-For auto-reloading during development:
+## Development
+
+For auto-reloading:
+```
 npm run dev
+```
 
-## Notes
-- The app uses MongoDB at mongodb://localhost:27017/yelp-camp
-- Default port is 3000, change with PORT environment variable
-- Customize session secret in .env for security
+## Configuration
 
-For more details, refer to the comments in app.js:
+- MongoDB URL: `mongodb://localhost:27017/yelp-camp`
+- Default port: 3000 (override with PORT env variable)
+- Session secret: Set in `.env` file
+
+For more details, see comments in `app.js`.

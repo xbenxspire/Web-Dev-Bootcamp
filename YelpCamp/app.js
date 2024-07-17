@@ -23,7 +23,7 @@ const reviewRoutes = require('./routes/reviews');
 
 const MongoStore = require('connect-mongo');
 
-// Database connection
+// Set up MongoDB connection
 const dbUrl = 'mongodb://localhost:27017/yelp-camp';
 
 mongoose.connect(dbUrl, {
@@ -33,22 +33,22 @@ mongoose.connect(dbUrl, {
     useFindAndModify: false
 });
 
-// Database connection error handling
+// Handle database connection events
 const db = mongoose.connection;
 db.on("error", console.error.bind(console, "connection error:"));
 db.once("open", () => {
     console.log("Database connected");
 });
 
-// Express app setup
+// Initialize Express app
 const app = express();
 
-// View engine setup
+// Set up view engine
 app.engine('ejs', ejsMate)
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'))
 
-// Middleware setup
+// Set up middleware
 app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride('_method'));
 app.use(express.static(path.join(__dirname, 'public')))
@@ -56,7 +56,7 @@ app.use(mongoSanitize({
     replaceWith: '_'
 }))
 
-// Session and store configuration
+// Configure session storage
 const secret = process.env.SECRET || 'thisshouldbeabettersecret!';
 
 const store = MongoStore.create({
@@ -69,6 +69,7 @@ store.on("error", function (e) {
     console.log("SESSION STORE ERROR", e)
 })
 
+// Set up session configuration
 const sessionConfig = {
     store,
     name: 'session',
@@ -83,18 +84,19 @@ const sessionConfig = {
     }
 }
 
+// Enable sessions, flash messages, and security headers
 app.use(session(sessionConfig));
 app.use(flash());
 app.use(helmet());
 
-// Add this middleware to make flash messages available to all templates
+// Make flash messages available to all templates
 app.use((req, res, next) => {
     res.locals.success = req.flash('success');
     res.locals.error = req.flash('error');
     next();
 });
 
-// Add this middleware to make maptilerApiKey available to all templates
+// Make user and API key available to all templates
 app.use((req, res, next) => {
     res.locals.currentUser = req.user;
     res.locals.success = req.flash('success');
@@ -103,7 +105,7 @@ app.use((req, res, next) => {
     next();
 });
 
-// Content Security Policy configuration
+// Configure Content Security Policy
 const scriptSrcUrls = [
     "https://stackpath.bootstrapcdn.com/",
     "https://kit.fontawesome.com/",
@@ -136,7 +138,7 @@ app.use(
                 "'self'",
                 "blob:",
                 "data:",
-                "https://res.cloudinary.com/douqbebwk/", //SHOULD MATCH YOUR CLOUDINARY ACCOUNT! 
+                "https://res.cloudinary.com/douqbebwk/",
                 "https://images.unsplash.com/",
                 "https://api.maptiler.com/",
             ],
@@ -145,7 +147,7 @@ app.use(
     })
 );
 
-// Passport configuration
+// Set up Passport for authentication
 app.use(passport.initialize());
 app.use(passport.session());
 passport.use(new LocalStrategy(User.authenticate()));
@@ -153,7 +155,7 @@ passport.use(new LocalStrategy(User.authenticate()));
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
-// Routes
+// Set up routes
 app.use('/', userRoutes);
 app.use('/campgrounds', campgroundRoutes)
 app.use('/campgrounds/:id/reviews', reviewRoutes)
@@ -162,19 +164,19 @@ app.get('/', (req, res) => {
     res.render('home')
 });
 
-// 404 handler
+// Handle 404 errors
 app.all('*', (req, res, next) => {
     next(new ExpressError('Page Not Found', 404))
 })
 
-// Error handler
+// Global error handler
 app.use((err, req, res, next) => {
     const { statusCode = 500 } = err;
     if (!err.message) err.message = 'Oh No, Something Went Wrong!'
     res.status(statusCode).render('error', { err })
 })
 
-// Start server
+// Start the server
 const port = process.env.PORT || 3000;
 app.listen(port, () => {
     console.log(`Serving on port ${port}`)
