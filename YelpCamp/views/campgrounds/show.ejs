@@ -30,22 +30,15 @@
         <div class="card mb-3">
             <div class="card-body">
                 <h5 class="card-title"><%= campground.title%></h5>
-                <p class="card-text"><%= campground.description%></p>
+                <p class="card-text"><%= campground.description %></p>
+                <p class="card-text"><%= campground.city %>, <%= campground.state %></p>
+                <small class="text-muted">Submitted by <%= campground.author.username %></small>
             </div>
             <ul class="list-group list-group-flush">
                 <li class="list-group-item text-muted"><%= campground.location %></li>
                 <li class="list-group-item">Submitted by <%= campground.author.username%></li>
                 <li class="list-group-item">$<%= campground.price%>/night</li>
             </ul>
-
-            <div class="card-body">
-                <h6>Debugging Info:</h6>
-                <p>Current User: <%= currentUser ? currentUser.username : 'Not logged in' %></p>
-                <p>Current User ID: <%= currentUser ? currentUser._id : 'N/A' %></p>
-                <p>Campground Author: <%= campground.author.username %></p>
-                <p>Campground Author ID: <%= campground.author._id %></p>
-                <p>IDs Match: <%= currentUser && campground.author.equals(currentUser._id) ? 'Yes' : 'No' %></p>
-            </div>
 
             <% if(currentUser && campground.author.equals(currentUser._id)) { %>
             <div class="card-body">

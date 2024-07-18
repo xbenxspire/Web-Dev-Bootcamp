@@ -1,15 +1,21 @@
 <%# Display flash messages using Bootstrap alerts %>
 
+<div class="alert alert-info">Flash partial is being rendered</div>
+
 <% if(success && success.length) { %>
 <div class="alert alert-success alert-dismissible fade show custom-alert" role="alert">
-    <%= typeof success === 'string' ? success.trim() : success %>
-    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    <%= success %>
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
 </div>
 <% } %>
 
 <% if(error && error.length) { %>
 <div class="alert alert-danger alert-dismissible fade show custom-alert" role="alert">
-    <%= typeof error === 'string' ? error.trim() : error %>
-    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    <%= error %>
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
 </div>
 <% } %>

@@ -28,8 +28,7 @@
     <!-- Main content area -->
     <main class="container mt-5">
         <!-- Flash messages for user notifications -->
-        <%- include('../partials/flash')%>
-        <!-- Dynamic body content, filled by child templates -->
+        <%- include('../partials/flash') %>
         <%- body %>
     </main>
     <!-- Footer, included as a partial -->
@@ -45,6 +44,14 @@
 
     <!-- Custom JavaScript for client-side form validation -->
     <script src='/javascripts/validateForms.js'></script>
+    <script>
+        // Automatically dismiss flash messages after 5 seconds
+        window.setTimeout(function() {
+            $(".alert").fadeTo(500, 0).slideUp(500, function(){
+                $(this).remove(); 
+            });
+        }, 5000);
+    </script>
 </body>
 
 </html>

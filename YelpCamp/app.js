@@ -152,13 +152,23 @@ passport.use(new LocalStrategy(User.authenticate()));
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
+app.use((req, res, next) => {
+    console.log(req.session);
+    console.log(req.user);
+    res.locals.currentUser = req.user;
+    res.locals.success = req.flash('success');
+    res.locals.error = req.flash('error');
+    next();
+});
+
 // Set up routes
 app.use('/', userRoutes);
 app.use('/campgrounds', campgroundRoutes)
 app.use('/campgrounds/:id/reviews', reviewRoutes)
 
 app.get('/', (req, res) => {
-    res.render('home')
+    console.log('Flash messages:', req.flash('success'));
+    res.render('home');
 });
 
 // Handle 404 errors

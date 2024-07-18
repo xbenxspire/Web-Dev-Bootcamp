@@ -16,9 +16,17 @@
             </div>
             <!-- Campground Location Input -->
             <div class="mb-3">
-                <label class="form-label" for="location">Location</label>
-                <input class="form-control" type="text" id="location" name="campground[location]"
-                    value="<%=campground.location %>" required>
+                <label class="form-label" for="city">City</label>
+                <input class="form-control" type="text" id="city" name="campground[city]"
+                    value="<%=campground.city %>" required>
+                <div class="valid-feedback">
+                    Looks good!
+                </div>
+            </div>
+            <div class="mb-3">
+                <label class="form-label" for="state">State</label>
+                <input class="form-control" type="text" id="state" name="campground[state]"
+                    value="<%=campground.state %>" required>
                 <div class="valid-feedback">
                     Looks good!
                 </div>
@@ -31,7 +39,7 @@
                     <span class="input-group-text" id="price-label">$</span>
                     <input type="text" class="form-control" id="price" placeholder="0.00" aria-label="price"
                         aria-describedby="price-label" name="campground[price]" value="<%=campground.price %>"
-                        required>\<div class="valid-feedback">
+                        required><div class="valid-feedback">
                         Looks good!
                     </div>
                 </div>
@@ -62,14 +70,11 @@
                 <input type="file" name="image" id="image" multiple>
             </div>
             <!-- Longitude and Latitude Inputs -->
-            <div class="mb-3">
-                <label for="longitude" class="form-label">Longitude</label>
-                <input type="number" step="any" name="campground[geometry][coordinates][0]" id="longitude" value="<%= campground.geometry.coordinates[0] %>">
-            </div>
-            <div class="mb-3">
-                <label for="latitude" class="form-label">Latitude</label>
-                <input type="number" step="any" name="campground[geometry][coordinates][1]" id="latitude" value="<%= campground.geometry.coordinates[1] %>">
-            </div>
+            <% if (campground.geometry && campground.geometry.type && campground.geometry.coordinates) { %>
+                <input type="hidden" name="campground[geometry][type]" value="<%= campground.geometry.type %>">
+                <input type="hidden" name="campground[geometry][coordinates][]" value="<%= campground.geometry.coordinates[0] %>">
+                <input type="hidden" name="campground[geometry][coordinates][]" value="<%= campground.geometry.coordinates[1] %>">
+            <% } %>
             <!-- Submit Button -->
             <div class="mb-3">
                 <button class="btn btn-info">Update Campground</button>

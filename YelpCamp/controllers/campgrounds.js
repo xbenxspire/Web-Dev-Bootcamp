@@ -23,8 +23,9 @@ module.exports.renderNewForm = (req, res) => {
 // Controller to create a new campground
 module.exports.createCampground = async (req, res, next) => {
     try {
-        const geoData = await maptiler.geocoding.forward(req.body.campground.location, { limit: 1 });
-        console.log('GeoData:', geoData); // Add this line for debugging
+        const { city, state } = req.body.campground;
+        const location = `${city}, ${state}, USA`;
+        const geoData = await maptiler.geocoding.forward(location, { limit: 1 });
 
         if (!geoData.features.length) {
             throw new Error('Location not found. Please try a more specific location.');
@@ -35,7 +36,7 @@ module.exports.createCampground = async (req, res, next) => {
         campground.images = req.files.map(f => ({ url: f.path, filename: f.filename }));
         campground.author = req.user._id;
         await campground.save();
-        console.log('Saved campground:', campground); // Add this line for debugging
+        console.log('Saved campground:', campground);
         req.flash('success', 'Successfully made a new campground!');
         res.redirect(`/campgrounds/${campground._id}`);
     } catch (error) {
@@ -76,18 +77,52 @@ module.exports.renderEditForm = async (req, res) => {
 // Controller to update a campground
 module.exports.updateCampground = async (req, res) => {
     const { id } = req.params;
-    const campground = await Campground.findByIdAndUpdate(id, { ...req.body.campground });
+    console.log(req.body);
+    const campground = await Campground.findById(id);
+
+    if (!campground) {
+        req.flash('error', 'Cannot find that campground!');
+        return res.redirect('/campgrounds');
+    }
+
+    // Update campground fields
+    campground.title = req.body.campground.title;
+    campground.city = req.body.campground.city;
+    campground.state = req.body.campground.state;
+    campground.description = req.body.campground.description;
+    campground.price = req.body.campground.price;
+
+    // Update geometry using MapTiler API
+    try {
+        const location = `${req.body.campground.city}, ${req.body.campground.state}, USA`;
+        const geoData = await maptiler.geocoding.forward(location, { limit: 1 });
+
+        if (geoData.features.length > 0) {
+            campground.geometry = geoData.features[0].geometry;
+        } else {
+            throw new Error('Location not found. Please try a more specific location.');
+        }
+    } catch (error) {
+        console.error('Error updating campground location:', error);
+        req.flash('error', error.message);
+        return res.redirect(`/campgrounds/${id}/edit`);
+    }
+
+    // Handle new images
     const imgs = req.files.map(f => ({ url: f.path, filename: f.filename }));
     campground.images.push(...imgs);
-    await campground.save();
+
+    // Handle image deletion
     if (req.body.deleteImages) {
         for (let filename of req.body.deleteImages) {
             await cloudinary.uploader.destroy(filename);
         }
-        await campground.updateOne({ $pull: { images: { filename: { $in: req.body.deleteImages } } } });
+        campground.images = campground.images.filter(img => !req.body.deleteImages.includes(img.filename));
     }
+
+    await campground.save();
     req.flash('success', 'Successfully updated campground!');
-    res.redirect(`/campgrounds/${campground._id}`)
+    res.redirect(`/campgrounds/${campground._id}`);
 }
 
 // Controller to delete a campground

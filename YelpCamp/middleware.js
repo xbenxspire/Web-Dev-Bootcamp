@@ -23,6 +23,7 @@ module.exports = {
         next();
     },
     validateCampground: (req, res, next) => {
+        console.log('Campground data:', req.body.campground);
         const { error } = campgroundSchema.validate(req.body);
         if (error) {
             const msg = error.details.map(el => el.message).join(',')
