@@ -35,6 +35,7 @@ const CampgroundSchema = new Schema({
     description: String,
     city: String,
     state: String,
+    location: String, // Added location field
     author: {
         type: Schema.Types.ObjectId,
         ref: 'User'
