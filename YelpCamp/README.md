@@ -2,7 +2,7 @@
 
 ## Prerequisites
 - Node.js (v14+)
-- MongoDB
+- MongoDB Atlas account or local MongoDB installation
 
 ## Quick Start
 
@@ -19,28 +19,43 @@
 
 ## Environment Setup
 
-1. Copy `.env.example` to `.env`
-2. Fill in your own values in the `.env` file
-
-4. Start MongoDB locally (default port: 27017)
-
-5. Launch the app:
+1. Create a `.env` file in the root directory
+2. Add the following variables to the `.env` file:
    ```
-   npm start
+   DB_URL=mongodb+srv://your_mongodb_atlas_url
+   CLOUDINARY_CLOUD_NAME=your_cloudinary_cloud_name
+   CLOUDINARY_KEY=your_cloudinary_key
+   CLOUDINARY_SECRET=your_cloudinary_secret
+   MAPTILER_API_KEY=your_maptiler_api_key
+   SECRET=your_session_secret
    ```
+3. Replace the placeholder values with your actual credentials
 
-6. Visit http://localhost:3000 in your browser
+## Database Seeding
+
+To populate the database with initial campgrounds:
+```
+node seeds/index.js
+```
+
+## Launch the Application
+
+Start the server:
+```
+npm start
+```
+
+Visit http://localhost:3000 in your browser
 
 ## Development
 
-For auto-reloading:
+For auto-reloading during development:
 ```
 npm run dev
 ```
 
 ## Configuration
 
-- MongoDB URL: `mongodb://localhost:27017/yelp-camp`
 - Default port: 3000 (override with PORT env variable)
 - Session secret: Set in `.env` file
 
