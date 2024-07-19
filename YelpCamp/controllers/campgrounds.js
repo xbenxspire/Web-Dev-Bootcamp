@@ -23,9 +23,7 @@ module.exports.renderNewForm = (req, res) => {
 // Controller to create a new campground
 module.exports.createCampground = async (req, res, next) => {
     try {
-        const { city, state } = req.body.campground;
-        const location = `${city}, ${state}, USA`;
-        const geoData = await maptiler.geocoding.forward(location, { limit: 1 });
+        const geoData = await maptiler.geocoding.forward(`${req.body.campground.city}, ${req.body.campground.state}`, { limit: 1 });
 
         if (!geoData.features.length) {
             throw new Error('Location not found. Please try a more specific location.');
