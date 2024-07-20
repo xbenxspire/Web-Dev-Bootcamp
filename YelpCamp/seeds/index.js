@@ -65,21 +65,30 @@ function generateDescription(city, state) {
         'rugged mountains', 'coastal beaches', 'desert landscapes', 'verdant valleys',
         'alpine meadows', 'cascading waterfalls', 'pristine wetlands', 'ancient redwood groves',
         'dramatic canyons', 'serene hot springs', 'wildflower-covered fields', 'glacial valleys',
-        'towering cliffs', 'crystal-clear streams', 'misty rainforests'
+        'towering cliffs', 'crystal-clear streams', 'misty rainforests',
+        'subalpine forests', 'tidal estuaries', 'volcanic formations', 'karst landscapes',
+        'barrier islands', 'coral reefs', 'geothermal basins', 'sandstone arches',
+        'painted deserts', 'old-growth forests'
     ];
     const activities = [
         'hiking', 'fishing', 'bird watching', 'stargazing', 'kayaking',
         'rock climbing', 'mountain biking', 'wildlife spotting', 'photography',
         'canoeing', 'whitewater rafting', 'horseback riding', 'geocaching',
         'nature walks', 'swimming', 'stand-up paddleboarding', 'bouldering',
-        'foraging', 'outdoor yoga', 'plein air painting'
+        'foraging', 'outdoor yoga', 'plein air painting',
+        'backcountry skiing', 'snowshoeing', 'ice climbing', 'spelunking',
+        'tide pooling', 'sandboarding', 'fly fishing', 'orienteering',
+        'wilderness survival training', 'night sky photography'
     ];
     const attractions = [
         'local wineries', 'historical sites', 'charming downtown', 'farmers markets', 'art galleries',
         'scenic drives', 'state parks', 'hot springs', 'cultural festivals',
         'national monuments', 'ghost towns', 'natural bridges', 'ancient petroglyphs',
         'wildlife refuges', 'botanical gardens', 'dark sky preserves', 'scenic byways',
-        'historic lighthouses', 'fossil beds', 'native american heritage sites'
+        'historic lighthouses', 'fossil beds', 'native american heritage sites',
+        'geologic wonders', 'alpine lakes', 'lava tube caves', 'wild and scenic rivers',
+        'historic battlefields', 'working ranches', 'abandoned mining towns',
+        'world-class observatories', 'living history museums', 'bison herds'
     ];
 
     const landscape1 = sample(landscapes);
@@ -107,7 +116,27 @@ function generateDescription(city, state) {
 
         `Immerse yourself in the wild beauty of ${city}, ${state}, a camping destination that boasts incredible ${landscape1}. From heart-pumping ${activity1} to soul-soothing ${activity2}, this campground has it all. Don't forget to check out ${attraction} for a taste of local culture in the midst of nature's grandeur.`,
 
-        `Discover your next favorite camping spot in ${city}, ${state}, where ${landscape1} and ${landscape2} create a outdoor lover's dream. This campground is your home base for exciting ${activity1} and leisurely ${activity2}. With ${attraction} nearby, ${city} offers a perfect mix of natural wonders and local charm.`
+        `Discover your next favorite camping spot in ${city}, ${state}, where ${landscape1} and ${landscape2} create a outdoor lover's dream. This campground is your home base for exciting ${activity1} and leisurely ${activity2}. With ${attraction} nearby, ${city} offers a perfect mix of natural wonders and local charm.`,
+
+        `Explore the untamed wilderness of ${city}, ${state}, where ${landscape1} stretch as far as the eye can see. This campground offers a true back-to-nature experience with opportunities for ${activity1} and ${activity2}. Don't miss the chance to visit ${attraction} and create memories that will last a lifetime.`,
+
+        `Discover the raw beauty of ${city}, ${state}, a hidden treasure nestled in the heart of ${landscape1}. Whether you're an experienced outdoorsman or a first-time camper, you'll find plenty to love here, from ${activity1} to exploring ${attraction}. Let the tranquility of nature rejuvenate your spirit.`,
+
+        `Experience camping at its finest in ${city}, ${state}, where ${landscape1} and ${landscape2} create a natural wonderland. This campground is your gateway to adventure, offering world-class ${activity1} and easy access to ${attraction}. Immerse yourself in the great outdoors and reconnect with nature.`,
+
+        `Escape to the unspoiled beauty of ${city}, ${state}, a camper's paradise surrounded by ${landscape1}. Here, you can challenge yourself with ${activity1}, relax with ${activity2}, or explore the fascinating ${attraction}. Create your own adventure in this outdoor playground.`,
+
+        `Welcome to ${city}, ${state}, where the spirit of adventure comes alive amidst ${landscape1} and ${landscape2}. This campground is your basecamp for exploration, offering opportunities for ${activity1} and ${activity2}. With ${attraction} nearby, you'll never run out of things to discover.`,
+
+        `Uncover the natural wonders of ${city}, ${state}, a camping destination that boasts both ${landscape1} and ${landscape2}. Whether you're here for the world-class ${activity1} or to explore ${attraction}, you'll find that this campground exceeds all expectations. Prepare for an unforgettable outdoor experience.`,
+
+        `Step into a world of outdoor wonder in ${city}, ${state}, where ${landscape1} set the stage for an epic camping adventure. Engage in exhilarating ${activity1}, unwind with ${activity2}, or take a day trip to ${attraction}. Here, every day brings a new opportunity for discovery and adventure.`,
+
+        `Immerse yourself in the pristine wilderness of ${city}, ${state}, a camper's dream nestled among ${landscape1}. This campground offers the perfect blend of solitude and adventure, with opportunities for ${activity1} and easy access to ${attraction}. Reconnect with nature and yourself in this outdoor paradise.`,
+
+        `Experience the majesty of the great outdoors in ${city}, ${state}, where ${landscape1} and ${landscape2} create a breathtaking natural tapestry. This campground is your ticket to adventure, offering world-class ${activity1} and proximity to ${attraction}. Create memories that will last a lifetime in this outdoor wonderland.`,
+
+        `Discover the untamed beauty of ${city}, ${state}, a camping destination that showcases the best of ${landscape1}. Whether you're here for the challenging ${activity1}, the serene ${activity2}, or to explore ${attraction}, you'll find that this campground offers something for every outdoor enthusiast. Prepare to be amazed by the raw beauty of nature.`
     ];
 
     return sample(templates);
