@@ -7,20 +7,20 @@ maptiler.config.fetch = fetch;
 const { cloudinary } = require("../cloudinary");
 
 // Helper function to convert state abbreviations to full names
-function convertStateAbbreviation(state) {
-    const stateAbbreviations = {
-        'AL': 'Alabama', 'AK': 'Alaska', 'AZ': 'Arizona', 'AR': 'Arkansas', 'CA': 'California',
-        'CO': 'Colorado', 'CT': 'Connecticut', 'DE': 'Delaware', 'FL': 'Florida', 'GA': 'Georgia',
-        'HI': 'Hawaii', 'ID': 'Idaho', 'IL': 'Illinois', 'IN': 'Indiana', 'IA': 'Iowa',
-        'KS': 'Kansas', 'KY': 'Kentucky', 'LA': 'Louisiana', 'ME': 'Maine', 'MD': 'Maryland',
-        'MA': 'Massachusetts', 'MI': 'Michigan', 'MN': 'Minnesota', 'MS': 'Mississippi', 'MO': 'Missouri',
-        'MT': 'Montana', 'NE': 'Nebraska', 'NV': 'Nevada', 'NH': 'New Hampshire', 'NJ': 'New Jersey',
-        'NM': 'New Mexico', 'NY': 'New York', 'NC': 'North Carolina', 'ND': 'North Dakota', 'OH': 'Ohio',
-        'OK': 'Oklahoma', 'OR': 'Oregon', 'PA': 'Pennsylvania', 'RI': 'Rhode Island', 'SC': 'South Carolina',
-        'SD': 'South Dakota', 'TN': 'Tennessee', 'TX': 'Texas', 'UT': 'Utah', 'VT': 'Vermont',
-        'VA': 'Virginia', 'WA': 'Washington', 'WV': 'West Virginia', 'WI': 'Wisconsin', 'WY': 'Wyoming'
-    };
+const stateAbbreviations = {
+    'AL': 'Alabama', 'AK': 'Alaska', 'AZ': 'Arizona', 'AR': 'Arkansas', 'CA': 'California',
+    'CO': 'Colorado', 'CT': 'Connecticut', 'DE': 'Delaware', 'FL': 'Florida', 'GA': 'Georgia',
+    'HI': 'Hawaii', 'ID': 'Idaho', 'IL': 'Illinois', 'IN': 'Indiana', 'IA': 'Iowa',
+    'KS': 'Kansas', 'KY': 'Kentucky', 'LA': 'Louisiana', 'ME': 'Maine', 'MD': 'Maryland',
+    'MA': 'Massachusetts', 'MI': 'Michigan', 'MN': 'Minnesota', 'MS': 'Mississippi', 'MO': 'Missouri',
+    'MT': 'Montana', 'NE': 'Nebraska', 'NV': 'Nevada', 'NH': 'New Hampshire', 'NJ': 'New Jersey',
+    'NM': 'New Mexico', 'NY': 'New York', 'NC': 'North Carolina', 'ND': 'North Dakota', 'OH': 'Ohio',
+    'OK': 'Oklahoma', 'OR': 'Oregon', 'PA': 'Pennsylvania', 'RI': 'Rhode Island', 'SC': 'South Carolina',
+    'SD': 'South Dakota', 'TN': 'Tennessee', 'TX': 'Texas', 'UT': 'Utah', 'VT': 'Vermont',
+    'VA': 'Virginia', 'WA': 'Washington', 'WV': 'West Virginia', 'WI': 'Wisconsin', 'WY': 'Wyoming'
+};
 
+function convertStateAbbreviation(state) {
     return stateAbbreviations[state.toUpperCase()] || state;
 }
 
@@ -43,17 +43,22 @@ module.exports.createCampground = async (req, res, next) => {
     try {
         const { city, state } = req.body.campground;
         const fullStateName = convertStateAbbreviation(state);
-        const geoData = await maptiler.geocoding.forward(`${city}, ${fullStateName}, USA`, { limit: 1 });
+        const location = `${city},${fullStateName}`;
+        const geoData = await maptiler.geocoding.forward(location, {
+            limit: 1,
+            types: ['place']
+        });
 
         if (!geoData.features.length) {
-            throw new Error('Location not found. Please try a more specific location.');
+            throw new Error('Location not found. Please try a more specific city and state.');
         }
 
+        const cityFeature = geoData.features[0];
+
         const campground = new Campground(req.body.campground);
-        campground.geometry = geoData.features[0].geometry;
+        campground.geometry = cityFeature.geometry;
         campground.images = req.files.map(f => ({ url: f.path, filename: f.filename }));
         campground.author = req.user._id;
-        console.log(req.body.campground); // Add this line for debugging
         await campground.save();
         console.log('Saved campground:', campground);
         req.flash('success', 'Successfully made a new campground!');
@@ -96,7 +101,6 @@ module.exports.renderEditForm = async (req, res) => {
 // Controller to update a campground
 module.exports.updateCampground = async (req, res) => {
     const { id } = req.params;
-    console.log(req.body);
     const campground = await Campground.findById(id);
 
     if (!campground) {
@@ -115,13 +119,26 @@ module.exports.updateCampground = async (req, res) => {
     try {
         const fullStateName = convertStateAbbreviation(req.body.campground.state);
         const location = `${req.body.campground.city}, ${fullStateName}, USA`;
-        const geoData = await maptiler.geocoding.forward(location, { limit: 1 });
+        const geoData = await maptiler.geocoding.forward(location, {
+            limit: 5,
+            types: ['place', 'locality', 'neighborhood']  // Include more types to improve accuracy
+        });
 
-        if (geoData.features.length > 0) {
-            campground.geometry = geoData.features[0].geometry;
-        } else {
-            throw new Error('Location not found. Please try a more specific location.');
+        if (!geoData.features.length) {
+            throw new Error('Location not found. Please try a more specific city and state.');
         }
+
+        // Find the correct city from the results
+        const cityFeature = geoData.features.find(feature =>
+            feature.place_name.toLowerCase().includes(req.body.campground.city.toLowerCase()) &&
+            (feature.place_name.toLowerCase().includes(fullStateName.toLowerCase()) || feature.place_name.toLowerCase().includes(req.body.campground.state.toLowerCase()))
+        );
+
+        if (!cityFeature) {
+            throw new Error('Unable to find the specified city. Please try a different city name.');
+        }
+
+        campground.geometry = cityFeature.geometry;
     } catch (error) {
         console.error('Error updating campground location:', error);
         req.flash('error', error.message);
