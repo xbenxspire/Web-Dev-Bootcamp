@@ -3,7 +3,7 @@ body {
     height: 100vh;
     /* Background image with overlay */
     background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),
-        url("https://images.unsplash.com/photo-1517823382935-51bfcb0ec6bc?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80");
+        url("https://res.cloudinary.com/dttpm6icr/image/upload/v1721442516/timothy-dykes-f0pBXcgZE8U-unsplash_psys0u.jpg");
     background-size: cover;
     background-position: center bottom;
     /* Text and box shadow for better readability */
