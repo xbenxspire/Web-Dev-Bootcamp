@@ -16,6 +16,7 @@ const methodOverride = require('method-override');
 const passport = require('passport');
 const LocalStrategy = require('passport-local');
 const User = require('./models/user');
+const Campground = require('./models/campground');
 const helmet = require('helmet');
 const mongoSanitize = require('express-mongo-sanitize');
 const userRoutes = require('./routes/users');
@@ -169,6 +170,33 @@ app.use('/campgrounds/:id/reviews', reviewRoutes)
 app.get('/', (req, res) => {
     console.log('Flash messages:', req.flash('success'));
     res.render('home');
+});
+
+app.get('/users/profile', async (req, res) => {
+    if (!req.isAuthenticated()) {
+        req.flash('error', 'You must be signed in to view your profile');
+        return res.redirect('/login');
+    }
+    try {
+        const userCampgrounds = await Campground.find({ author: req.user._id });
+        const campgrounds = {
+            features: userCampgrounds.map(campground => {
+                return {
+                    type: "Feature",
+                    geometry: campground.geometry,
+                    properties: {
+                        popUpMarkup: `<strong><a href="/campgrounds/${campground._id}">${campground.title}</a></strong>
+                                  <p>${campground.description.substring(0, 20)}...</p>`
+                    }
+                };
+            })
+        };
+        res.render('users/profile', { userCampgrounds, campgrounds });
+    } catch (error) {
+        console.error(error);
+        req.flash('error', 'Unable to load profile');
+        res.redirect('/campgrounds');
+    }
 });
 
 // Handle 404 errors

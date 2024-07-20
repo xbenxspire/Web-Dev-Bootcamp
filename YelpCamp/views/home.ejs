@@ -13,6 +13,7 @@
 </head>
 
 <body class="d-flex text-center text-white bg-dark">
+    <div class="bg-image"></div>
     <div class="cover-container d-flex w-100 h-100 p-3 mx-auto flex-column">
         <!-- Header section -->
         <header class="mb-auto">
@@ -22,11 +23,11 @@
                 <nav class="nav nav-masthead justify-content-center float-md-right">
                     <a class="nav-link active" aria-current="page" href="#">Home</a>
                     <a class="nav-link" href="/campgrounds">Campgrounds</a>
-                    <!-- Conditional rendering based on user authentication status -->
                     <% if(!currentUser) { %>
                     <a class="nav-link" href="/login">Login</a>
                     <a class="nav-link" href="/register">Register</a>
                     <% } else { %>
+                    <a class="nav-link" href="/users/profile">Profile</a>
                     <a class="nav-link" href="/logout">Logout</a>
                     <% } %>
                 </nav>
@@ -42,7 +43,6 @@
             <ul class="list-unstyled">
                 <li>🏕️ Explore our diverse campgrounds</li>
                 <li>📸 Share your own camping spots</li>
-                <li>💬 Connect with fellow outdoor enthusiasts</li>
             </ul>
             <a href="/campgrounds" class="btn btn-lg btn-secondary font-weight-bold border-white bg-white">Start Your Adventure</a>
         </main>

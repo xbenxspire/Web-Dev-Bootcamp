@@ -29,7 +29,8 @@
                     <a class="nav-link" href="/login">Login</a>
                     <a class="nav-link" href="/register">Register</a>
                 <% } else {%>
-                    <%# Display Logout link for authenticated users %>
+                    <%# Display Profile and Logout links for authenticated users %>
+                    <a class="nav-link" href="/users/profile">Profile</a>
                     <a class="nav-link" href="/logout">Logout</a>
                 <% } %>
             </div>

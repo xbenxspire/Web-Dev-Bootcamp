@@ -1,0 +1,38 @@
+<% layout('layouts/boilerplate')%>
+
+<!-- MapTiler Clustermap container -->
+<div id="cluster-map"></div>
+
+<!-- Main container for the profile page -->
+<div class="container mt-5">
+    <h2 class="mt-4">Your Campgrounds</h2>
+    <!-- Grid layout for displaying user's campgrounds -->
+    <div class="row">
+        <!-- Loop through each of the user's campgrounds -->
+        <% userCampgrounds.forEach(campground => { %>
+            <!-- Each campground is displayed in a column, 3 per row on medium screens -->
+            <div class="col-md-4 mb-3">
+                <div class="card">
+                    <!-- Display campground image or a default if no images -->
+                    <img src="<%= campground.images.length ? campground.images[0].url : 'https://res.cloudinary.com/douqbebwk/image/upload/v1600103881/YelpCamp/lz8jjv2gyyg5bzeqq3ki.png' %>" 
+                         class="card-img-top" alt="<%= campground.title %>">
+                    <div class="card-body">
+                        <h5 class="card-title"><%= campground.title %></h5>
+                        <!-- Link to view the full details of this campground -->
+                        <a href="/campgrounds/<%= campground._id %>" class="btn btn-primary">View</a>
+                    </div>
+                </div>
+            </div>
+        <% }) %>
+    </div>
+</div>
+
+<!-- Scripts for map functionality -->
+<script>
+    // Pass the MapTiler API key from server-side to client-side
+    const mapTilerKey = '<%= process.env.MAPTILER_API_KEY %>';
+    // Pass the user's campgrounds data to the client-side for map rendering
+    const userCampgrounds = { features: <%- JSON.stringify(userCampgrounds) %>};
+</script>
+<!-- Include the cluster map JavaScript file -->
+<script src="/javascripts/clusterMap.js"></script>
