@@ -39,7 +39,23 @@ const campImages = [
     { id: 'sebastian-marx-IejSZKGu1mY-unsplash_dajm5p', credit: 'Sebastian Marx on Unsplash' },
     { id: 'denys-nevozhai-63Znf38gnXk-unsplash_plurdm', credit: 'Denys Nevozhai on Unsplash' },
     { id: 'jack-sloop-qelGaL2OLyE-unsplash_xfa3jq', credit: 'Jack Sloop on Unsplash' },
-    { id: 'andreas-ronningen-i9FLJwYhVQs-unsplash_dwfxd7', credit: 'Andreas Ronningen on Unsplash' }
+    { id: 'andreas-ronningen-i9FLJwYhVQs-unsplash_dwfxd7', credit: 'Andreas Ronningen on Unsplash' },
+    { id: 'vadim-sadovski-scWIbhdNG_w-unsplash_n10dvy', credit: 'Vadim Sadovski on Unsplash' },
+    { id: 'toomas-tartes-qaTPg_iV4wk-unsplash_g8aj92', credit: 'Toomas Tartes on Unsplash' },
+    { id: 'rory-mckeever-7iSv7naOlk8-unsplash_dbgco6', credit: 'Rory McKeever on Unsplash' },
+    { id: 'eugene-ga-FjPLjD5cDDU-unsplash_nkti12', credit: 'Eugene Ga on Unsplash' },
+    { id: 'pj-gal-szabo-vkyAx0yGdIM-unsplash_nzgpuz', credit: 'PJ Gal-Szabo on Unsplash' },
+    { id: 'bernard-AghUTwUuD0k-unsplash_sakqjd', credit: 'Bernard on Unsplash' },
+    { id: 'lex-sirikiat-oT4hTqWoZ6M-unsplash_mowime', credit: 'Lex Sirikiat on Unsplash' },
+    { id: 'yoann-boyer-I6Xozma9Bzo-unsplash_zn04ux', credit: 'Yoann Boyer on Unsplash' },
+    { id: 'andrew-scofield-OivhEmfO-kk-unsplash_stkdkl', credit: 'Andrew Scofield on Unsplash' },
+    { id: 'keghan-crossland-qBX6EMdy0a4-unsplash_bsddmg', credit: 'Keghan Crossland on Unsplash' },
+    { id: 'rory-mckeever-GxJnOzrybFw-unsplash_jigpnl', credit: 'Rory McKeever on Unsplash' },
+    { id: 'theodor-vasile-EVkrWtZPsio-unsplash_teko7h', credit: 'Theodor Vasile on Unsplash' },
+    { id: 'elijah-austin-FhDyEDf2mLo-unsplash_xyndfq', credit: 'Elijah Austin on Unsplash' },
+    { id: 'tim-foster-v6063AyCAt8-unsplash_um3clr', credit: 'Tim Foster on Unsplash' },
+    { id: 'scott-goodwill-y8Ngwq34_Ak-unsplash_nmqy0e', credit: 'Scott Goodwill on Unsplash' },
+    { id: 'chris-schog-EnCaUE4QNOw-unsplash_clcts9', credit: 'Chris Schog on Unsplash' }
 ];
 
 // Main function to seed the database
