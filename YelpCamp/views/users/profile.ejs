@@ -29,10 +29,8 @@
 
 <!-- Scripts for map functionality -->
 <script>
-    // Pass the MapTiler API key from server-side to client-side
     const mapTilerKey = '<%= process.env.MAPTILER_API_KEY %>';
-    // Pass the user's campgrounds data to the client-side for map rendering
-    const userCampgrounds = { features: <%- JSON.stringify(userCampgrounds) %>};
+    const campgrounds = { features: <%- JSON.stringify(userCampgrounds) %>};
 </script>
 <!-- Include the cluster map JavaScript file -->
 <script src="/javascripts/clusterMap.js"></script>
