@@ -199,6 +199,10 @@ app.get('/users/profile', async (req, res) => {
     }
 });
 
+app.get('/citations', (req, res) => {
+    res.render('citations');
+});
+
 // Handle 404 errors
 app.all('*', (req, res, next) => {
     next(new ExpressError('Page Not Found', 404));
