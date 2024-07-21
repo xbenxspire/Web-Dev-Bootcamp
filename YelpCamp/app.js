@@ -201,8 +201,8 @@ app.get('/users/profile', async (req, res) => {
 
 // Handle 404 errors
 app.all('*', (req, res, next) => {
-    next(new ExpressError('Page Not Found', 404))
-})
+    next(new ExpressError('Page Not Found', 404));
+});
 
 // Global error handler
 app.use((err, req, res, next) => {

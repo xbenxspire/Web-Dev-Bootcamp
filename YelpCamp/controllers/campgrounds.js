@@ -1,9 +1,6 @@
-// Import required modules
 const Campground = require('../models/campground');
-const maptiler = require('@maptiler/client');
-const fetch = require('node-fetch');
-maptiler.config.apiKey = process.env.MAPTILER_API_KEY;
-maptiler.config.fetch = fetch;
+const maptilerClient = require("@maptiler/client");
+maptilerClient.config.apiKey = process.env.MAPTILER_API_KEY;
 const { cloudinary } = require("../cloudinary");
 
 // Helper function to convert state abbreviations to full names
@@ -20,43 +17,52 @@ const stateAbbreviations = {
     'VA': 'Virginia', 'WA': 'Washington', 'WV': 'West Virginia', 'WI': 'Wisconsin', 'WY': 'Wyoming'
 };
 
+// Function to convert state input to full name
 function convertStateAbbreviation(state) {
-    return stateAbbreviations[state.toUpperCase()] || state;
+    const uppercaseState = state.toUpperCase();
+    if (stateAbbreviations.hasOwnProperty(uppercaseState)) {
+        return stateAbbreviations[uppercaseState];
+    } else {
+        // Check if the input is a full state name
+        const fullStateName = Object.values(stateAbbreviations).find(
+            fullName => fullName.toUpperCase() === uppercaseState
+        );
+        return fullStateName || state; // Return the found full name or the original input
+    }
 }
 
-// Controller to get all campgrounds
 module.exports.index = async (req, res) => {
     const campgrounds = await Campground.find({});
-    campgrounds.forEach(campground => {
-        console.log(campground.images);
-    });
-    res.render('campgrounds/index', { campgrounds });
+    res.render('campgrounds/index', { campgrounds })
 }
 
-// Controller to render new campground form
 module.exports.renderNewForm = (req, res) => {
     res.render('campgrounds/new');
 }
 
-// Controller to create a new campground
 module.exports.createCampground = async (req, res, next) => {
     try {
         const { city, state } = req.body.campground;
         const fullStateName = convertStateAbbreviation(state);
-        const location = `${city},${fullStateName}`;
-        const geoData = await maptiler.geocoding.forward(location, {
+        const location = `${city}, ${fullStateName}, USA`;
+
+        console.log('Geocoding location:', location); // Add this line for debugging
+
+        const geoData = await maptilerClient.geocoding.forward(location, {
             limit: 1,
-            types: ['place']
+            types: ['municipality', 'place'],
+            language: 'en',
+            country: ['US'] // Change this to an array
         });
 
-        if (!geoData.features.length) {
-            throw new Error('Location not found. Please try a more specific city and state.');
+        console.log('Geocoding response:', geoData); // Add this line for debugging
+
+        if (!geoData.features || geoData.features.length === 0) {
+            throw new Error('Unable to find the specified location. Please check your city and state.');
         }
 
-        const cityFeature = geoData.features[0];
-
         const campground = new Campground(req.body.campground);
-        campground.geometry = cityFeature.geometry;
+        campground.geometry = geoData.features[0].geometry;
         campground.images = req.files.map(f => ({ url: f.path, filename: f.filename }));
         campground.author = req.user._id;
         await campground.save();
@@ -70,16 +76,13 @@ module.exports.createCampground = async (req, res, next) => {
     }
 }
 
-// Controller to show a specific campground
-module.exports.showCampground = async (req, res) => {
-    const campground = await Campground.findById(req.params.id)
-        .populate({
-            path: 'reviews',
-            populate: {
-                path: 'author'
-            }
-        })
-        .populate('author');
+module.exports.showCampground = async (req, res,) => {
+    const campground = await Campground.findById(req.params.id).populate({
+        path: 'reviews',
+        populate: {
+            path: 'author'
+        }
+    }).populate('author');
     if (!campground) {
         req.flash('error', 'Cannot find that campground!');
         return res.redirect('/campgrounds');
@@ -87,7 +90,6 @@ module.exports.showCampground = async (req, res) => {
     res.render('campgrounds/show', { campground });
 }
 
-// Controller to render edit form for a campground
 module.exports.renderEditForm = async (req, res) => {
     const { id } = req.params;
     const campground = await Campground.findById(id)
@@ -98,71 +100,33 @@ module.exports.renderEditForm = async (req, res) => {
     res.render('campgrounds/edit', { campground });
 }
 
-// Controller to update a campground
 module.exports.updateCampground = async (req, res) => {
     const { id } = req.params;
-    const campground = await Campground.findById(id);
-
-    if (!campground) {
-        req.flash('error', 'Cannot find that campground!');
-        return res.redirect('/campgrounds');
-    }
-
-    // Update campground fields
-    campground.title = req.body.campground.title;
-    campground.city = req.body.campground.city;
-    campground.state = req.body.campground.state;
-    campground.description = req.body.campground.description;
-    campground.price = req.body.campground.price;
-
-    // Update geometry using MapTiler API
-    try {
-        const fullStateName = convertStateAbbreviation(req.body.campground.state);
-        const location = `${req.body.campground.city}, ${fullStateName}, USA`;
-        const geoData = await maptiler.geocoding.forward(location, {
-            limit: 5,
-            types: ['place', 'locality', 'neighborhood']  // Include more types to improve accuracy
-        });
-
-        if (!geoData.features.length) {
-            throw new Error('Location not found. Please try a more specific city and state.');
-        }
-
-        // Find the correct city from the results
-        const cityFeature = geoData.features.find(feature =>
-            feature.place_name.toLowerCase().includes(req.body.campground.city.toLowerCase()) &&
-            (feature.place_name.toLowerCase().includes(fullStateName.toLowerCase()) || feature.place_name.toLowerCase().includes(req.body.campground.state.toLowerCase()))
-        );
-
-        if (!cityFeature) {
-            throw new Error('Unable to find the specified city. Please try a different city name.');
-        }
-
-        campground.geometry = cityFeature.geometry;
-    } catch (error) {
-        console.error('Error updating campground location:', error);
-        req.flash('error', error.message);
-        return res.redirect(`/campgrounds/${id}/edit`);
-    }
-
-    // Handle new images
+    console.log(req.body);
+    const campground = await Campground.findByIdAndUpdate(id, { ...req.body.campground });
+    const { city, state } = campground;
+    const fullStateName = convertStateAbbreviation(state);
+    const location = `${city}, ${fullStateName}, USA`;
+    const geoData = await maptilerClient.geocoding.forward(location, {
+        limit: 1,
+        types: ['municipality', 'place'],
+        language: 'en',
+        country: ['US'] // Change this to an array
+    });
+    campground.geometry = geoData.features[0].geometry;
     const imgs = req.files.map(f => ({ url: f.path, filename: f.filename }));
     campground.images.push(...imgs);
-
-    // Handle image deletion
+    await campground.save();
     if (req.body.deleteImages) {
         for (let filename of req.body.deleteImages) {
             await cloudinary.uploader.destroy(filename);
         }
-        campground.images = campground.images.filter(img => !req.body.deleteImages.includes(img.filename));
+        await campground.updateOne({ $pull: { images: { filename: { $in: req.body.deleteImages } } } })
     }
-
-    await campground.save();
     req.flash('success', 'Successfully updated campground!');
-    res.redirect(`/campgrounds/${campground._id}`);
+    res.redirect(`/campgrounds/${campground._id}`)
 }
 
-// Controller to delete a campground
 module.exports.deleteCampground = async (req, res) => {
     const { id } = req.params;
     await Campground.findByIdAndDelete(id);
