@@ -203,6 +203,10 @@ app.get('/citations', (req, res) => {
     res.render('citations');
 });
 
+app.get('/about', (req, res) => {
+    res.render('about');
+});
+
 // Handle 404 errors
 app.all('*', (req, res, next) => {
     next(new ExpressError('Page Not Found', 404));
