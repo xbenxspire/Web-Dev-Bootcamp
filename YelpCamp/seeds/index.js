@@ -29,33 +29,33 @@ db.once("open", () => {
 // Helper function to select a random element from an array
 const sample = array => array[Math.floor(Math.random() * array.length)];
 
-// Array of existing image public IDs in Cloudinary YelpCamp folder with photographer credits
+// Array of existing image public IDs in Cloudinary YelpCamp folder with photographer credits and descriptions
 const campImages = [
-    { id: 'wei-pan-Ta0A1miYZKc-unsplash_smcjqy', credit: 'Wei Pan on Unsplash' },
-    { id: 'zach-betten-K9olx8OF36A-unsplash_ppvcyu', credit: 'Zach Betten on Unsplash' },
-    { id: 'joshua-gresham-qmZF9CptLKs-unsplash_na5rgj', credit: 'Joshua Gresham on Unsplash' },
-    { id: 'dino-reichmuth-5Rhl-kSRydQ-unsplash_iwr6mp', credit: 'Dino Reichmuth on Unsplash' },
-    { id: 'jeremy-thomas-WaNZvXEnYok-unsplash_tccpqn', credit: 'Jeremy Thomas on Unsplash' },
-    { id: 'sebastian-marx-IejSZKGu1mY-unsplash_dajm5p', credit: 'Sebastian Marx on Unsplash' },
-    { id: 'denys-nevozhai-63Znf38gnXk-unsplash_plurdm', credit: 'Denys Nevozhai on Unsplash' },
-    { id: 'jack-sloop-qelGaL2OLyE-unsplash_xfa3jq', credit: 'Jack Sloop on Unsplash' },
-    { id: 'andreas-ronningen-i9FLJwYhVQs-unsplash_dwfxd7', credit: 'Andreas Ronningen on Unsplash' },
-    { id: 'vadim-sadovski-scWIbhdNG_w-unsplash_n10dvy', credit: 'Vadim Sadovski on Unsplash' },
-    { id: 'toomas-tartes-qaTPg_iV4wk-unsplash_g8aj92', credit: 'Toomas Tartes on Unsplash' },
-    { id: 'rory-mckeever-7iSv7naOlk8-unsplash_dbgco6', credit: 'Rory McKeever on Unsplash' },
-    { id: 'eugene-ga-FjPLjD5cDDU-unsplash_nkti12', credit: 'Eugene Ga on Unsplash' },
-    { id: 'pj-gal-szabo-vkyAx0yGdIM-unsplash_nzgpuz', credit: 'PJ Gal-Szabo on Unsplash' },
-    { id: 'bernard-AghUTwUuD0k-unsplash_sakqjd', credit: 'Bernard on Unsplash' },
-    { id: 'lex-sirikiat-oT4hTqWoZ6M-unsplash_mowime', credit: 'Lex Sirikiat on Unsplash' },
-    { id: 'yoann-boyer-I6Xozma9Bzo-unsplash_zn04ux', credit: 'Yoann Boyer on Unsplash' },
-    { id: 'andrew-scofield-OivhEmfO-kk-unsplash_stkdkl', credit: 'Andrew Scofield on Unsplash' },
-    { id: 'keghan-crossland-qBX6EMdy0a4-unsplash_bsddmg', credit: 'Keghan Crossland on Unsplash' },
-    { id: 'rory-mckeever-GxJnOzrybFw-unsplash_jigpnl', credit: 'Rory McKeever on Unsplash' },
-    { id: 'theodor-vasile-EVkrWtZPsio-unsplash_teko7h', credit: 'Theodor Vasile on Unsplash' },
-    { id: 'elijah-austin-FhDyEDf2mLo-unsplash_xyndfq', credit: 'Elijah Austin on Unsplash' },
-    { id: 'tim-foster-v6063AyCAt8-unsplash_um3clr', credit: 'Tim Foster on Unsplash' },
-    { id: 'scott-goodwill-y8Ngwq34_Ak-unsplash_nmqy0e', credit: 'Scott Goodwill on Unsplash' },
-    { id: 'chris-schog-EnCaUE4QNOw-unsplash_clcts9', credit: 'Chris Schog on Unsplash' }
+    { id: 'wei-pan-Ta0A1miYZKc-unsplash_smcjqy', credit: 'Wei Pan on Unsplash', description: 'Illuminated tent under a starry night sky with mountains in the background' },
+    { id: 'zach-betten-K9olx8OF36A-unsplash_ppvcyu', credit: 'Zach Betten on Unsplash', description: 'Campsite with tents near a serene lake surrounded by pine trees' },
+    { id: 'joshua-gresham-qmZF9CptLKs-unsplash_na5rgj', credit: 'Joshua Gresham on Unsplash', description: 'Cozy campfire with logs as seats, surrounded by tall trees' },
+    { id: 'dino-reichmuth-5Rhl-kSRydQ-unsplash_iwr6mp', credit: 'Dino Reichmuth on Unsplash', description: 'Tent on a cliff overlooking a misty valley at sunrise' },
+    { id: 'jeremy-thomas-WaNZvXEnYok-unsplash_tccpqn', credit: 'Jeremy Thomas on Unsplash', description: 'Northern lights dancing over a lone tent in a snowy landscape' },
+    { id: 'sebastian-marx-IejSZKGu1mY-unsplash_dajm5p', credit: 'Sebastian Marx on Unsplash', description: 'Campsite with multiple tents in a grassy field near a forest' },
+    { id: 'denys-nevozhai-63Znf38gnXk-unsplash_plurdm', credit: 'Denys Nevozhai on Unsplash', description: 'Tent perched on a rocky outcrop overlooking a vast mountain range' },
+    { id: 'jack-sloop-qelGaL2OLyE-unsplash_xfa3jq', credit: 'Jack Sloop on Unsplash', description: 'Hammock strung between trees with a scenic lake view' },
+    { id: 'andreas-ronningen-i9FLJwYhVQs-unsplash_dwfxd7', credit: 'Andreas Ronningen on Unsplash', description: 'Tent illuminated from within, set against a backdrop of snow-capped mountains' },
+    { id: 'vadim-sadovski-scWIbhdNG_w-unsplash_n10dvy', credit: 'Vadim Sadovski on Unsplash', description: 'Milky Way arching over a solitary tent in a desert landscape' },
+    { id: 'toomas-tartes-qaTPg_iV4wk-unsplash_g8aj92', credit: 'Toomas Tartes on Unsplash', description: 'Campfire with marshmallows roasting on sticks, surrounded by people' },
+    { id: 'rory-mckeever-7iSv7naOlk8-unsplash_dbgco6', credit: 'Rory McKeever on Unsplash', description: 'Tent on a wooden platform overlooking a misty forest valley' },
+    { id: 'eugene-ga-FjPLjD5cDDU-unsplash_nkti12', credit: 'Eugene Ga on Unsplash', description: 'Campsite with multiple tents near a calm lake reflecting the sky' },
+    { id: 'pj-gal-szabo-vkyAx0yGdIM-unsplash_nzgpuz', credit: 'PJ Gal-Szabo on Unsplash', description: 'Person sitting by a campfire at night with a starry sky above' },
+    { id: 'bernard-AghUTwUuD0k-unsplash_sakqjd', credit: 'Bernard on Unsplash', description: 'Tent on a beach with a colorful sunset over the ocean' },
+    { id: 'lex-sirikiat-oT4hTqWoZ6M-unsplash_mowime', credit: 'Lex Sirikiat on Unsplash', description: 'Aerial view of a campsite surrounded by autumn-colored forest' },
+    { id: 'yoann-boyer-I6Xozma9Bzo-unsplash_zn04ux', credit: 'Yoann Boyer on Unsplash', description: 'Person standing on a cliff edge overlooking a vast mountain landscape' },
+    { id: 'andrew-scofield-OivhEmfO-kk-unsplash_stkdkl', credit: 'Andrew Scofield on Unsplash', description: 'Tent pitched on a sandy beach with turquoise waters in the background' },
+    { id: 'keghan-crossland-qBX6EMdy0a4-unsplash_bsddmg', credit: 'Keghan Crossland on Unsplash', description: 'Campsite with a vintage camper van parked near a forest' },
+    { id: 'rory-mckeever-GxJnOzrybFw-unsplash_jigpnl', credit: 'Rory McKeever on Unsplash', description: 'Person sitting on a log by a campfire, enjoying a scenic mountain view' },
+    { id: 'theodor-vasile-EVkrWtZPsio-unsplash_teko7h', credit: 'Theodor Vasile on Unsplash', description: 'Tent illuminated at night with a starry sky and silhouetted mountains' },
+    { id: 'elijah-austin-FhDyEDf2mLo-unsplash_xyndfq', credit: 'Elijah Austin on Unsplash', description: 'Campsite with multiple tents in a clearing surrounded by tall pine trees' },
+    { id: 'tim-foster-v6063AyCAt8-unsplash_um3clr', credit: 'Tim Foster on Unsplash', description: 'Person sitting on a cliff edge, watching a colorful sunset over mountains' },
+    { id: 'scott-goodwill-y8Ngwq34_Ak-unsplash_nmqy0e', credit: 'Scott Goodwill on Unsplash', description: 'Tent pitched on a grassy hill with a panoramic view of rolling hills' },
+    { id: 'chris-schog-EnCaUE4QNOw-unsplash_clcts9', credit: 'Chris Schog on Unsplash', description: 'Campfire with people gathered around, sharing stories under the stars' }
 ];
 
 // Add this function to generate descriptions
@@ -170,7 +170,8 @@ const seedDB = async () => {
                         return {
                             url: cloudinary.url(randomImage.id, { width: 1600, height: 900, crop: "fill" }),
                             filename: randomImage.id,
-                            photographer: randomImage.credit
+                            photographer: randomImage.credit,
+                            description: randomImage.description
                         };
                     })()
                 ]
