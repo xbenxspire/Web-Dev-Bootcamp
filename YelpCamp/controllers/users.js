@@ -1,12 +1,6 @@
 // Import the User model
 const User = require('../models/user');
 const crypto = require('crypto');
-const Mailjet = require('node-mailjet');
-
-const mailjet = new Mailjet({
-    apiKey: process.env.MAILJET_API_KEY,
-    apiSecret: process.env.MAILJET_SECRET_KEY
-});
 
 // Controller function to render the registration form
 module.exports.renderRegister = (req, res) => {
@@ -72,39 +66,10 @@ module.exports.forgotPassword = async (req, res) => {
     user.resetPasswordExpires = Date.now() + 3600000; // 1 hour
     await user.save();
 
-    const request = mailjet
-        .post("send", { 'version': 'v3.1' })
-        .request({
-            "Messages": [
-                {
-                    "From": {
-                        "Email": "your-verified-sender@yourdomain.com",
-                        "Name": "YelpCamp"
-                    },
-                    "To": [
-                        {
-                            "Email": user.email,
-                            "Name": user.username
-                        }
-                    ],
-                    "Subject": "YelpCamp Password Reset",
-                    "TextPart": `You are receiving this because you (or someone else) have requested the reset of the password for your account.
-                    Please click on the following link, or paste this into your browser to complete the process:
-                    http://${req.headers.host}/reset/${token}
-                    If you did not request this, please ignore this email and your password will remain unchanged.`
-                }
-            ]
-        });
-
-    try {
-        await request;
-        req.flash('success', 'An e-mail has been sent to ' + user.email + ' with further instructions.');
-        res.redirect('/forgot-password');
-    } catch (error) {
-        console.error(error);
-        req.flash('error', 'An error occurred while sending the email. Please try again later.');
-        res.redirect('/forgot-password');
-    }
+    // TODO: Implement a new email sending method here
+    console.log('Password reset token:', token);
+    req.flash('success', 'A password reset token has been generated. Please implement a new email sending method.');
+    res.redirect('/forgot-password');
 }
 
 module.exports.renderResetPassword = async (req, res) => {
