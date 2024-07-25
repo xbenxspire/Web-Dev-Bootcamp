@@ -1,6 +1,6 @@
 // This file defines the User model schema for MongoDB
 // It uses passport-local-mongoose for authentication
-// It includes fields for username and email
+// It includes fields for username, email, resetPasswordToken, and resetPasswordExpires
 
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
@@ -11,7 +11,9 @@ const UserSchema = new Schema({
         type: String,
         required: true,
         unique: true
-    }
+    },
+    resetPasswordToken: String,
+    resetPasswordExpires: Date
 });
 
 UserSchema.plugin(passportLocalMongoose);

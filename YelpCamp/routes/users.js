@@ -21,5 +21,11 @@ router.route('/login')
 // Define route for user logout
 router.get('/logout', users.logout)  // GET route to handle user logout
 
+// Define routes for forgot password functionality
+router.get('/forgot-password', users.renderForgotPassword);
+router.post('/forgot-password', users.forgotPassword);
+router.get('/reset/:token', users.renderResetPassword);
+router.post('/reset/:token', users.resetPassword);
+
 // Export the router to be used in the main app
 module.exports = router;
