@@ -13,6 +13,12 @@
                 <small class="text-muted text-center mt-1">Photo by <a href="https://unsplash.com/@kevinianeselli?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText">Kevin Ianeselli</a> on <a href="https://unsplash.com/photos/dome-tent-on-mountain-top-with-sun-as-background-photo-ebnlHkqfUHY?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText">Unsplash</a></small>
                 <div class="card-body">
                     <h5 class="card-title">Login</h5>
+                    <!-- Add this section to display error messages -->
+                    <% if(error && error.length) { %>
+                    <div class="alert alert-danger" role="alert">
+                        <%= error %>
+                    </div>
+                    <% } %>
                     <!-- Login form -->
                     <form action="/login" method="POST" class="validated-form" novalidate>
                         <!-- Username input field -->

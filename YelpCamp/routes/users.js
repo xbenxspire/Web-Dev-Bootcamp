@@ -14,8 +14,8 @@ router.route('/register')
 router.route('/login')
     .get(users.renderLogin)  // GET route to render the login form
     .post(passport.authenticate('local', {
-        failureFlash: true,  // Enable flash messages for failed login attempts
-        failureRedirect: '/login'  // Redirect to login page if authentication fails
+        failureFlash: 'Invalid username or password.',
+        failureRedirect: '/login'
     }), users.login)  // POST route to handle user login
 
 // Define route for user logout
