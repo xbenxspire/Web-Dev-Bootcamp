@@ -4,3 +4,4 @@
 # Other common Node.js ignores
 node_modules/
 npm-debug.log
+npm_output.log
