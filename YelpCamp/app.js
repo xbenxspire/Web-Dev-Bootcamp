@@ -75,8 +75,10 @@ const secret = process.env.SECRET || 'thisshouldbeabettersecret!';
 // touchAfter: 24*60*60 = only update session in DB once per 24 hours (unless data changes)
 const store = MongoStore.create({
     mongoUrl: dbUrl,
-    secret: secret,
-    touchAfter: 24 * 60 * 60
+    crypto: {
+        secret: secret
+    },
+    touchAfter: 24 * 3600
 });
 
 store.on("error", function (e) {
