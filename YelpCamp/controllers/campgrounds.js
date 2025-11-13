@@ -1,7 +1,7 @@
 const Campground = require('../models/campground');
 const maptilerClient = require("@maptiler/client");
 maptilerClient.config.apiKey = process.env.MAPTILER_API_KEY;
-const { cloudinary } = require("../cloudinary");
+const { cloudinary, streamUpload } = require("../cloudinary");
 
 // Helper function to convert state abbreviations to full names
 const stateAbbreviations = {
@@ -63,7 +63,12 @@ module.exports.createCampground = async (req, res, next) => {
 
         const campground = new Campground(req.body.campground);
         campground.geometry = geoData.features[0].geometry;
-        campground.images = req.files.map(f => ({ url: f.path, filename: f.filename }));
+        const uploads = [];
+        for (let file of req.files) {
+            const result = await streamUpload(file.buffer);
+            uploads.push({ url: result.secure_url, filename: result.public_id });
+        }
+        campground.images = uploads;
         campground.author = req.user._id;
         await campground.save();
         console.log('Saved campground:', campground);
@@ -114,8 +119,14 @@ module.exports.updateCampground = async (req, res) => {
         country: ['US'] // Change this to an array
     });
     campground.geometry = geoData.features[0].geometry;
-    const imgs = req.files.map(f => ({ url: f.path, filename: f.filename }));
-    campground.images.push(...imgs);
+    if (req.files && req.files.length > 0) {
+        const uploads = [];
+        for (let file of req.files) {
+            const result = await streamUpload(file.buffer);
+            uploads.push({ url: result.secure_url, filename: result.public_id });
+        }
+        campground.images.push(...uploads);
+    }
     await campground.save();
     if (req.body.deleteImages) {
         for (let filename of req.body.deleteImages) {
