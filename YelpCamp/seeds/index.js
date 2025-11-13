@@ -1,23 +1,22 @@
 // Import required modules
-require('dotenv').config();
 const mongoose = require('mongoose');
 const cities = require('./cities');
 const { places, descriptors } = require('./seedHelpers');
 const Campground = require('../models/campground');
 const cloudinary = require('cloudinary').v2;
+const { dbUrl } = require('../app'); // Import dbUrl from app.js
 
 cloudinary.config({
-    cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+    cloud_name: process.env.CLOUDINARY_CLOUD_NAME, // This will still rely on .env being loaded by app.js
     api_key: process.env.CLOUDINARY_KEY,
     api_secret: process.env.CLOUDINARY_SECRET
 });
 
 // Connect to MongoDB
 mongoose.set('strictQuery', false);
-mongoose.connect(process.env.DB_URL, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true
-});
+// Mongoose has been updated. Deprecated connection options (useNewUrlParser, useUnifiedTopology)
+// have been removed as they are now default in the current Mongoose version.
+mongoose.connect(dbUrl);
 
 // Set up database connection events
 const db = mongoose.connection;
