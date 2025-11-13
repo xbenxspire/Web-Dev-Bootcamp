@@ -1,7 +1,6 @@
 // Import the Cloudinary library
 const cloudinary = require('cloudinary').v2;
-// Import CloudinaryStorage from multer-storage-cloudinary
-const { CloudinaryStorage } = require('multer-storage-cloudinary');
+const streamifier = require('streamifier');
 
 // Configure Cloudinary with environment variables
 cloudinary.config({
@@ -10,17 +9,28 @@ cloudinary.config({
     api_secret: process.env.CLOUDINARY_SECRET
 });
 
-// Create a new CloudinaryStorage instance
-const storage = new CloudinaryStorage({
-    cloudinary,
-    params: {
-        folder: 'YelpCamp', // Set the folder name in Cloudinary
-        allowedFormats: ['jpeg', 'png', 'jpg'] // Specify allowed image formats
-    }
-});
+// Create a new function to upload files to Cloudinary
+const streamUpload = (buffer) => {
+    return new Promise((resolve, reject) => {
+        let stream = cloudinary.uploader.upload_stream(
+            {
+                folder: 'YelpCamp',
+                allowed_formats: ['jpeg', 'png', 'jpg']
+            },
+            (error, result) => {
+                if (result) {
+                    resolve(result);
+                } else {
+                    reject(error);
+                }
+            }
+        );
+        streamifier.createReadStream(buffer).pipe(stream);
+    });
+};
 
 // Export the configured cloudinary and storage objects
 module.exports = {
     cloudinary,
-    storage
+    streamUpload
 }
