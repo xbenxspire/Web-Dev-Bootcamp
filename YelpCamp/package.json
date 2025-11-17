@@ -30,7 +30,7 @@
     "multer": "^2.0.2",
     "multer-storage-cloudinary": "^2.2.1",
     "node-fetch": "^2.7.0",
-    "node-geocoder": "^4.3.0",
+    "node-geocoder": "^4.4.1",
     "nodemailer": "^7.0.10",
     "passport": "^0.7.0",
     "passport-local": "^1.0.0",
